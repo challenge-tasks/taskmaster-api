@@ -20,15 +20,15 @@ class Task extends Model
 
     protected static function booted(): void
     {
-        static::saved(function (Task $task) {
-            if ($task->isDirty('image')) {
-                Storage::disk('public_uploads')->delete($task->getOriginal('image'));
+        static::updated(function (Task $task) {
+            if ($task->isDirty('image') && Storage::exists($task->getOriginal('image'))) {
+                Storage::delete($task->getOriginal('image'));
             }
         });
 
         static::deleted(function (Task $task) {
-            if ($task->image && Storage::disk('public_uploads')->exists($task->image)) {
-                Storage::disk('public_uploads')->delete($task->getOriginal('image'));
+            if ($task->image && Storage::exists($task->image)) {
+                Storage::delete($task->getOriginal('image'));
             }
         });
     }
