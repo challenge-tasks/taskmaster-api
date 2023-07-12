@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\TaskStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -31,5 +33,10 @@ class Task extends Model
                 Storage::delete($task->getOriginal('image'));
             }
         });
+    }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', TaskStatusEnum::PUBLISHED->value);
     }
 }
