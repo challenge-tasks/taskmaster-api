@@ -93,7 +93,11 @@ class TaskResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(TaskStatusEnum::options()),
+
+                Tables\Filters\SelectFilter::make('difficulty')
+                    ->options(TaskStatusEnum::options()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
