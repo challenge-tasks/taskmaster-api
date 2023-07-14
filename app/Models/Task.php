@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DifficultyEnum;
 use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,5 +39,12 @@ class Task extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', TaskStatusEnum::PUBLISHED->value);
+    }
+
+    public function getDifficultyLabelAttribute(): string
+    {
+        $difficulties = DifficultyEnum::options();
+
+        return $difficulties[$this->difficulty];
     }
 }

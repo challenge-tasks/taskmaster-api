@@ -21,6 +21,7 @@ Route::controller('AuthController')->group(function () {
 
 Route::controller('TaskController')->prefix('tasks')->group(function () {
     Route::get('/', 'index');
+    Route::get('filter', 'filter');
     Route::get('{task}', 'show');
 });
 
