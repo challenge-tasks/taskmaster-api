@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\DifficultyEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Task\TaskListResource;
+use App\Http\Resources\Api\V1\Task\TaskResource;
 use App\Models\Task;
 use App\Services\Task\TaskQueryService;
 use Illuminate\Http\Request;
@@ -101,10 +102,28 @@ class TaskController extends Controller
         ]);
     }
 
-    public function show(Task $task)
+    /**
+     * @OA\Get(
+     *     path="/api/v1/tasks/{slug}",
+     *     tags={"Task page"},
+     *     summary="Task detailed info",
+     *     @OA\Parameter(
+     *          description="Task slug",
+     *          in="path",
+     *          name="slug",
+     *          required=true,
+     *          @OA\Schema(type="string"),
+     *          @OA\Examples(example="first-task", value="first-task", summary="first-task"),
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Not found"),
+     *     @OA\Response(response="500", description="Server error")
+     * )
+     */
+    public function show(string $slug)
     {
-        return response()->json([
-            'data' => $task
-        ]);
+        $task = Task::where('slug', $slug)->firstOrFail();
+
+        return TaskResource::make($task);
     }
 }

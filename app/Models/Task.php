@@ -7,13 +7,17 @@ use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug;
 
     protected $fillable = [
+        'slug',
         'name',
         'summary',
         'image',
@@ -29,11 +33,20 @@ class Task extends Model
             }
         });
 
+        static::deleting(function (Task $task) {
+            $task->details()->delete();
+        });
+
         static::deleted(function (Task $task) {
             if ($task->image && Storage::exists($task->image)) {
                 Storage::delete($task->getOriginal('image'));
             }
         });
+    }
+
+    public function details(): HasOne
+    {
+        return $this->hasOne(TaskDetail::class);
     }
 
     public function scopePublished(Builder $query): Builder
@@ -46,5 +59,13 @@ class Task extends Model
         $difficulties = DifficultyEnum::options();
 
         return $difficulties[$this->difficulty];
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->preventOverwrite();
     }
 }

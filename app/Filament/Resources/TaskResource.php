@@ -30,12 +30,14 @@ class TaskResource extends Resource
                                 ->required()
                                 ->maxLength(255),
 
+                            Forms\Components\TextInput::make('slug')
+                                ->maxLength(255),
+
                             Forms\Components\Textarea::make('summary')
                                 ->required()
                                 ->maxLength(255),
 
                             Forms\Components\Select::make('status')
-                                ->required()
                                 ->options(TaskStatusEnum::options()),
 
                             Forms\Components\Select::make('difficulty')
@@ -51,13 +53,12 @@ class TaskResource extends Resource
 
                     Forms\Components\Wizard\Step::make('Additional')
                         ->schema([
-                            Forms\Components\TextInput::make('name')
-                                ->required()
-                                ->maxLength(255),
-
-                            Forms\Components\Textarea::make('summary')
-                                ->required()
-                                ->maxLength(255),
+                            Forms\Components\Fieldset::make('Details')
+                                ->relationship('details')
+                                ->schema([
+                                    Forms\Components\RichEditor::make('description')
+                                        ->columnSpan(2)
+                                ])
                         ])
                 ])
                     ->columnSpan(2)
