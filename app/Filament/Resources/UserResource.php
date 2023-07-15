@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\RoleEnum;
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
