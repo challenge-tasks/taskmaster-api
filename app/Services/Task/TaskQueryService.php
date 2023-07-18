@@ -27,7 +27,16 @@ class TaskQueryService
                     return $query->whereHas('stacks', function (Builder $query) use ($value): Builder {
                         return $query->whereIn('slug', $value);
                     });
-                })
+                }),
+                AllowedFilter::callback('tags', function (Builder $query, mixed $value): Builder {
+                    if (! is_array($value)) {
+                        $value = [$value];
+                    }
+
+                    return $query->whereHas('tags', function (Builder $query) use ($value): Builder {
+                        return $query->whereIn('slug', $value);
+                    });
+                }),
             ])
             ->allowedSorts([
                 'id', 'name', 'difficulty', 'created_at', 'updated_at'

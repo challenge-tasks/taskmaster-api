@@ -65,7 +65,12 @@ class TaskResource extends Resource
                             Forms\Components\Select::make('stacks')
                                 ->label('Technologies stack')
                                 ->multiple()
-                                ->relationship('stacks', 'name')
+                                ->relationship('stacks', 'name'),
+
+                               Forms\Components\Select::make('tags')
+                                   ->label('Tags')
+                                   ->multiple()
+                                   ->relationship('tags', 'name')
                         ])
                 ])
                     ->columnSpan(2)

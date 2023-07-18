@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Task\TaskListResource;
 use App\Http\Resources\Api\V1\Task\TaskResource;
 use App\Models\Stack;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Services\Task\TaskQueryService;
 use Illuminate\Http\Request;
@@ -95,6 +96,11 @@ class TaskController extends Controller
             ->limit(10)
             ->get();
 
+        $tags = Tag::selectRaw('slug as value, name as label')
+            ->whereHas('tasks')
+            ->limit(10)
+            ->get();
+
         $data = [
             'difficulties' => [
                 'key' => 'difficulty',
@@ -105,6 +111,11 @@ class TaskController extends Controller
                 'key' => 'tech_stacks',
                 'label' => 'Стек технологий',
                 'items' => $stacks
+            ],
+            'tags' => [
+                'key' => 'tags',
+                'label' => 'Теги',
+                'items' => $tags
             ]
         ];
 
