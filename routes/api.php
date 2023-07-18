@@ -25,6 +25,10 @@ Route::controller('TaskController')->prefix('tasks')->group(function () {
     Route::get('{task}', 'show');
 });
 
+Route::controller('StackController')->prefix('tech-stacks')->group(function () {
+    Route::get('search', 'search');
+});
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', 'AuthController@logout');
 });

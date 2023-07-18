@@ -18,6 +18,15 @@ class TaskQueryService
                     }
 
                     return $query->whereIn('difficulty', $value);
+                }),
+                AllowedFilter::callback('tech_stacks', function (Builder $query, mixed $value): Builder {
+                    if (! is_array($value)) {
+                        $value = [$value];
+                    }
+
+                    return $query->whereHas('stacks', function (Builder $query) use ($value): Builder {
+                        return $query->whereIn('slug', $value);
+                    });
                 })
             ])
             ->allowedSorts([
