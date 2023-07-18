@@ -49,6 +49,11 @@ class Task extends Model
         return $this->hasOne(TaskDetail::class);
     }
 
+    public function stacks()
+    {
+        return $this->belongsToMany(Stack::class);
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', TaskStatusEnum::PUBLISHED->value);

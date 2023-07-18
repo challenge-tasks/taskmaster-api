@@ -19,6 +19,8 @@ class TaskResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-check';
 
+    protected static ?int $navigationSort = 1;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -58,7 +60,12 @@ class TaskResource extends Resource
                                 ->schema([
                                     Forms\Components\RichEditor::make('description')
                                         ->columnSpan(2)
-                                ])
+                                ]),
+
+                            Forms\Components\Select::make('stacks')
+                                ->label('Technologies stack')
+                                ->multiple()
+                                ->relationship('stacks', 'name')
                         ])
                 ])
                     ->columnSpan(2)

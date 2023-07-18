@@ -17,6 +17,11 @@ class Stack extends Model
         'hex'
     ];
 
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class);
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

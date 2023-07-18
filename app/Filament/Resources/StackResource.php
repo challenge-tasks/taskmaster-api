@@ -10,13 +10,14 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Closure;
 
 class StackResource extends Resource
 {
     protected static ?string $model = Stack::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-database';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -31,7 +32,6 @@ class StackResource extends Resource
 
                 Forms\Components\TextInput::make('hex')
                     ->required()
-                    ->prefix('#')
                     ->maxLength(255)
             ]);
     }

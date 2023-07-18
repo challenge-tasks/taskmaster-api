@@ -6,6 +6,7 @@ use App\Enums\DifficultyEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Task\TaskListResource;
 use App\Http\Resources\Api\V1\Task\TaskResource;
+use App\Models\Stack;
 use App\Models\Task;
 use App\Services\Task\TaskQueryService;
 use Illuminate\Http\Request;
@@ -89,11 +90,21 @@ class TaskController extends Controller
     {
         $difficulties = DifficultyEnum::filterOptions();
 
+        $stacks = Stack::selectRaw('slug as value, name as label, hex')
+            ->whereHas('tasks')
+            ->limit(10)
+            ->get();
+
         $data = [
             'difficulties' => [
                 'key' => 'difficulty',
                 'label' => 'Сложность',
                 'items' => $difficulties
+            ],
+            'tech_stacks' => [
+                'key' => 'tech_stacks',
+                'label' => 'Стек технологий',
+                'items' => $stacks
             ]
         ];
 
