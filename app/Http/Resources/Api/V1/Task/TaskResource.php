@@ -17,8 +17,8 @@ class TaskResource extends JsonResource
             'image' => $this->image,
             'difficulty' => $this->difficulty_label,
             'description' => $this->details?->description,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => strtotime($this->created_at),
+            'updated_at' => strtotime($this->updated_at),
         ];
     }
 }

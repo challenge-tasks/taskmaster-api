@@ -7,7 +7,7 @@ enum RoleEnum: string
     case ADMIN = 'admin';
     case USER = 'user';
 
-    public static function getOptions(): array
+    public static function options(): array
     {
         return [
             self::ADMIN->value => 'Admin',

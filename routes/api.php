@@ -29,6 +29,14 @@ Route::controller('StackController')->prefix('tech-stacks')->group(function () {
     Route::get('search', 'search');
 });
 
+Route::controller('TagController')->prefix('tags')->group(function () {
+    Route::get('search', 'search');
+});
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', 'AuthController@logout');
+
+    Route::get('users/{user}/tasks/statuses', 'UserTaskController@statuses');
+    Route::apiResource('users.tasks', 'UserTaskController')
+        ->parameters(['user' => 'user:username', 'task' => 'task:slug']);
 });
