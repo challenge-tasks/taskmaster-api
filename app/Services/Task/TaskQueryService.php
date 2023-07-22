@@ -2,13 +2,14 @@
 
 namespace App\Services\Task;
 
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskQueryService
 {
-    public static function filter(Builder $query): QueryBuilder
+    public static function filter(BuilderContract $query): QueryBuilder
     {
         return QueryBuilder::for($query)
             ->allowedFilters([
@@ -19,6 +20,7 @@ class TaskQueryService
 
                     return $query->whereIn('difficulty', $value);
                 }),
+
                 AllowedFilter::callback('tech_stacks', function (Builder $query, mixed $value): Builder {
                     if (! is_array($value)) {
                         $value = [$value];
@@ -28,6 +30,7 @@ class TaskQueryService
                         return $query->whereIn('slug', $value);
                     });
                 }),
+
                 AllowedFilter::callback('tags', function (Builder $query, mixed $value): Builder {
                     if (! is_array($value)) {
                         $value = [$value];

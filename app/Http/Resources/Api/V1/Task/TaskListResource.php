@@ -16,8 +16,23 @@ class TaskListResource extends JsonResource
             'summary' => $this->summary,
             'image' => $this->image,
             'difficulty' => $this->difficulty_label,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'stacks' => $this->relationLoaded('stacks') ? $this->stacks->map(function ($stack) {
+                return [
+                    'id' => $stack->id,
+                    'slug' => $stack->slug,
+                    'name' => $stack->name,
+                    'hex' => $stack->hex
+                ];
+            }) : [],
+            'tags' => $this->relationLoaded('tags') ? $this->tags->map(function ($tag) {
+                return [
+                    'id' => $tag->id,
+                    'slug' => $tag->slug,
+                    'name' => $tag->name
+                ];
+            }) : [],
+            'created_at' => strtotime($this->created_at),
+            'updated_at' => strtotime($this->updated_at),
         ];
     }
 }

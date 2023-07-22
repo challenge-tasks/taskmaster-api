@@ -41,4 +41,9 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return $this->username;
     }
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class)->withPivot('status');
+    }
 }
