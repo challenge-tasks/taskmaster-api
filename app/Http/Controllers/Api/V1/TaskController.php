@@ -70,7 +70,9 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 25);
-        $query = Task::published()->latest('updated_at');
+        $query = Task::published()
+            ->with(['stacks', 'tags'])
+            ->latest('updated_at');
 
         $tasks = TaskQueryService::filter($query)->paginate($perPage);
 
