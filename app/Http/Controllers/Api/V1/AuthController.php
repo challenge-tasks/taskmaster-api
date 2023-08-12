@@ -50,8 +50,10 @@ class AuthController extends Controller
         $token = $user->createToken('MyApp')->accessToken;
 
         return response()->json([
-            'user' => UserResource::make($user),
-            'token' => $token
+            'data' => [
+                'user' => UserResource::make($user),
+                'token' => $token
+            ]
         ]);
     }
 
@@ -90,8 +92,10 @@ class AuthController extends Controller
         $user->assignRole(RoleEnum::USER->value);
 
         return response()->json([
-            'user' => UserResource::make($user),
-            'token' => $token
+            'data' => [
+                'user' => UserResource::make($user),
+                'token' => $token
+            ]
         ], 201);
     }
 

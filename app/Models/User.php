@@ -18,6 +18,7 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     protected $fillable = [
         'username',
+        'avatar',
         'email',
         'password',
     ];
@@ -31,6 +32,21 @@ class User extends Authenticatable implements FilamentUser, HasName
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function (User $user) {
+            $hash = md5($user->email);
+            $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+        });
+
+        static::updating(function (User $user) {
+            if ($user->isDirty('email')) {
+                $hash = md5($user->email);
+                $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+            }
+        });
+    }
 
     public function canAccessFilament(): bool
     {
