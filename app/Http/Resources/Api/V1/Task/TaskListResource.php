@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1\Task;
 
+use App\Enums\UserTaskStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -9,7 +10,7 @@ class TaskListResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
@@ -34,5 +35,12 @@ class TaskListResource extends JsonResource
             'created_at' => strtotime($this->created_at),
             'updated_at' => strtotime($this->updated_at),
         ];
+
+        if ($this->pivot && $this->pivot->status) {
+            $statuses = UserTaskStatusEnum::options();
+            $data['status'] = $statuses[$this->pivot->status];
+        }
+
+        return $data;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\ErrorTypeEnum;
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\User\LoginRequest;
@@ -42,7 +43,8 @@ class AuthController extends Controller
 
         if (! Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Bad credentials.'
+                'message' => 'Bad credentials.',
+                'type' => ErrorTypeEnum::UNAUTHORIZED
             ], 401);
         }
 

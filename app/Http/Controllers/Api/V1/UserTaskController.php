@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\TaskStatusEnum;
 use App\Enums\UserTaskStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\User\UserTaskRequest;
 use App\Http\Resources\Api\V1\Task\TaskListResource;
+use App\Http\Resources\Api\V1\Task\TaskResource;
 use App\Models\User;
 use App\Services\Task\TaskQueryService;
 
@@ -77,7 +79,8 @@ class UserTaskController extends Controller
         $perPage = $request->input('per_page', 25);
 
         $user = User::where('username', $username)->firstOrFail();
-        $tasks = TaskQueryService::filter($user->tasks()->published()->with(['stacks', 'tags']))->paginate($perPage);
+        $tasks = $user->tasks()->with(['stacks', 'tags'])->where('tasks.status', TaskStatusEnum::PUBLISHED);
+        $tasks = TaskQueryService::filter($tasks)->paginate($perPage);
 
         return TaskListResource::collection($tasks);
     }
@@ -157,11 +160,7 @@ class UserTaskController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
 
-        return response()->json([
-            'data' => [
-                'status' => UserTaskStatusEnum::labelFromOption($task->pivot->status)
-            ]
-        ]);
+        return TaskResource::make($task);
     }
 
     /**
