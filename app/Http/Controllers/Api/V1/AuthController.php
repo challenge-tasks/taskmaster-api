@@ -43,8 +43,8 @@ class AuthController extends Controller
 
         if (! Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Bad credentials.',
-                'type' => ErrorTypeEnum::UNAUTHORIZED
+                'message' => 'Unauthorized.',
+                'type' => ErrorTypeEnum::INCORRECT_PASSWORD
             ], 401);
         }
 
