@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\User;
 
+use App\Helpers\ValidationHelper;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterRequest extends FormRequest
@@ -16,7 +19,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'username' => ['required', 'string', 'unique:users,username'],
-            'email' => ['required', 'email:rfc,dns', 'unique:users,email'],
+            'email' => ['required', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'max:100']
         ];
     }
@@ -28,5 +31,15 @@ class RegisterRequest extends FormRequest
         return array_merge($validated, [
             'password' => Hash::make($validated['password'])
         ]);
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $failedRules = $validator->failed();
+
+        throw new HttpResponseException(response()->json([
+            'message' => 'Unprocessable Content.',
+            'type' => ValidationHelper::getErrorType($failedRules)
+        ], 422));
     }
 }
