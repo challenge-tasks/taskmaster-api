@@ -21,8 +21,7 @@ class TaskListResource extends JsonResource
                 return [
                     'id' => $stack->id,
                     'slug' => $stack->slug,
-                    'name' => $stack->name,
-                    'hex' => $stack->hex
+                    'name' => $stack->name
                 ];
             }) : [],
             'tags' => $this->relationLoaded('tags') ? $this->tags->map(function ($tag) {

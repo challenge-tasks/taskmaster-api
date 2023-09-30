@@ -93,7 +93,7 @@ class TaskController extends Controller
     {
         $difficulties = DifficultyEnum::filterOptions();
 
-        $stacks = Stack::selectRaw('slug as value, name as label, hex')
+        $stacks = Stack::selectRaw('slug as value, name as label')
             ->whereHas('tasks')
             ->limit(10)
             ->get();
