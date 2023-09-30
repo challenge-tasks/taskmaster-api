@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\StackResource\Pages;
-use App\Filament\Resources\StackResource\RelationManagers;
 use App\Models\Stack;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -28,10 +27,6 @@ class StackResource extends Resource
 
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('hex')
-                    ->required()
                     ->maxLength(255)
             ]);
     }
@@ -44,9 +39,6 @@ class StackResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('hex')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')

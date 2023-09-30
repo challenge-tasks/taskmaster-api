@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stacks', function (Blueprint $table) {
+        Schema::create('task_images', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->unique();
-            $table->string('name');
+            $table->foreignIdFor(\App\Models\Task::class)->constrained();
+            $table->text('image');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stacks');
+        Schema::dropIfExists('task_images');
     }
 };

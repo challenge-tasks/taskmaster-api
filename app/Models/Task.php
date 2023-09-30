@@ -7,6 +7,7 @@ use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Sluggable\HasSlug;
@@ -35,6 +36,7 @@ class Task extends Model
 
         static::deleting(function (Task $task) {
             $task->details()->delete();
+            $task->images()->each(fn(TaskImage $taskImage) => $taskImage->delete());
         });
 
         static::deleted(function (Task $task) {
@@ -47,6 +49,11 @@ class Task extends Model
     public function details(): HasOne
     {
         return $this->hasOne(TaskDetail::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(TaskImage::class);
     }
 
     public function stacks()

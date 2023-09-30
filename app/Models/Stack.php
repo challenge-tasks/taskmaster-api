@@ -13,8 +13,7 @@ class Stack extends Model
 
     protected $fillable = [
         'slug',
-        'name',
-        'hex'
+        'name'
     ];
 
     public function tasks()

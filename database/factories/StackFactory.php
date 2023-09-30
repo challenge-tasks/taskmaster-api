@@ -11,8 +11,7 @@ class StackFactory extends Factory
     {
         return [
             'slug' => $this->faker->slug,
-            'name' => Str::ucfirst($this->faker->word),
-            'hex' => $this->faker->hexColor
+            'name' => Str::ucfirst($this->faker->word)
         ];
     }
 }

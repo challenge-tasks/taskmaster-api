@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Enums\DifficultyEnum;
 use App\Enums\TaskStatusEnum;
 use App\Filament\Resources\TaskResource\Pages;
-use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -67,10 +66,20 @@ class TaskResource extends Resource
                                 ->multiple()
                                 ->relationship('stacks', 'name'),
 
-                               Forms\Components\Select::make('tags')
-                                   ->label('Tags')
-                                   ->multiple()
-                                   ->relationship('tags', 'name')
+                           Forms\Components\Select::make('tags')
+                               ->label('Tags')
+                               ->multiple()
+                               ->relationship('tags', 'name'),
+
+                            Forms\Components\Repeater::make('Additional images')
+                                ->relationship('images')
+                                ->schema([
+                                    Forms\Components\FileUpload::make('image')
+                                        ->maxSize(2048)
+                                        ->disk('public_uploads')
+                                        ->directory('tasks/additional'),
+                                ])
+                                ->createItemButtonLabel('Add image'),
                         ])
                 ])
                     ->columnSpan(2)
