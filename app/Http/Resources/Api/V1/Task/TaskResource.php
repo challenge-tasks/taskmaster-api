@@ -16,6 +16,7 @@ class TaskResource extends JsonResource
             'name' => $this->name,
             'summary' => $this->summary,
             'image' => $this->image,
+            'images' => $this->images && count($this->images) ? $this->images->pluck('image') : null,
             'difficulty' => $this->difficulty_label,
             'description' => $this->details?->description,
             'created_at' => strtotime($this->created_at),
