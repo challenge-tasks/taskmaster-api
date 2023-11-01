@@ -42,6 +42,10 @@ class ValidationHelper
             $type = ErrorTypeEnum::PASSWORD_MAX;
         }
 
+        else if (isset($failedRules['password']['Confirmed'])) {
+            $type = ErrorTypeEnum::PASSWORD_NOT_CONFIRMED;
+        }
+
         return $type;
     }
 }

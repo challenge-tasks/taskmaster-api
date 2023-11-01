@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     /**
-     * @OA\Post (
-     *      path="/api/v1/login",
-     *      tags={"Auth"},
-     *      summary="Log in",
-     *      @OA\RequestBody(
+     * @OA\Post(
+     *     path="/api/v1/login",
+     *     tags={"Auth"},
+     *     summary="Log in",
+     *     @OA\RequestBody(
      *          required=true,
      *          description="Pass user credentials",
      *          @OA\JsonContent(
@@ -26,15 +26,15 @@ class AuthController extends Controller
      *              @OA\Property(property="email", type="string", example="admin@gmail.com"),
      *              @OA\Property(property="password", type="string", example="123456789"),
      *          ),
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *          response=200,
      *          description="Successful operation"
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *          response=401,
      *          description="Auth error"
-     *      )
+     *     )
      * )
      */
     public function login(LoginRequest $request)
@@ -60,11 +60,11 @@ class AuthController extends Controller
     }
 
     /**
-     * @OA\Post (
-     *      path="/api/v1/register",
-     *      tags={"Auth"},
-     *      summary="Registration",
-     *      @OA\RequestBody(
+     * @OA\Post(
+     *     path="/api/v1/register",
+     *     tags={"Auth"},
+     *     summary="Registration",
+     *     @OA\RequestBody(
      *          required=true,
      *          description="Pass user credentials",
      *          @OA\JsonContent(
@@ -73,15 +73,15 @@ class AuthController extends Controller
      *              @OA\Property(property="email", type="string", example="test@gmail.com"),
      *              @OA\Property(property="password", type="string", example="pass@word"),
      *          ),
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *          response=200,
      *          description="Successful operation"
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *          response=422,
      *          description="Bad request"
-     *      )
+     *     )
      * )
      */
     public function register(RegisterRequest $request)
@@ -102,11 +102,12 @@ class AuthController extends Controller
     }
 
     /**
-     * @OA\Post (
-     *      path="/api/v1/logout",
-     *      tags={"Auth"},
-     *      summary="Log out",
-     *      @OA\RequestBody(
+     * @OA\Post(
+     *     path="/api/v1/logout",
+     *     tags={"Auth"},
+     *     summary="Log out",
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
      *          required=true,
      *          description="Pass user credentials",
      *          @OA\JsonContent(
@@ -115,15 +116,15 @@ class AuthController extends Controller
      *              @OA\Property(property="email", type="string", example="test@gmail.com"),
      *              @OA\Property(property="password", type="string", example="pass@word"),
      *          ),
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *          response=200,
      *          description="Successful operation"
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *          response=422,
      *          description="Bad request"
-     *      )
+     *     )
      * )
      */
     public function logout()

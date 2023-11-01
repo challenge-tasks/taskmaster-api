@@ -20,6 +20,7 @@ enum ErrorTypeEnum: string
     case PASSWORD_REQUIRED = 'password_required';
     case PASSWORD_MIN = 'password_min_eight';
     case PASSWORD_MAX = 'password_max_one_hundred';
+    case PASSWORD_NOT_CONFIRMED = 'password_not_confirmed';
     case INCORRECT_PASSWORD = 'incorrect_password';
     case USERNAME_REQUIRED = 'username_required';
     case USERNAME_EXISTS = 'username_exists';

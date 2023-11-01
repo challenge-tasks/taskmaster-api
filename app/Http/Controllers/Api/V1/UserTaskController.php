@@ -18,6 +18,7 @@ class UserTaskController extends Controller
      *     path="/api/v1/users/{username}/tasks",
      *     tags={"User tasks"},
      *     summary="Tasks list",
+     *     security={{ "apiAuth": {} }},
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
@@ -90,6 +91,7 @@ class UserTaskController extends Controller
      *     path="/api/v1/users/{username}/tasks",
      *     tags={"User tasks"},
      *     summary="Add task",
+     *     security={{ "apiAuth": {} }},
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
@@ -134,6 +136,7 @@ class UserTaskController extends Controller
      *     path="/api/v1/users/{username}/tasks/{taskSlug}",
      *     tags={"User tasks"},
      *     summary="Show task",
+     *     security={{ "apiAuth": {} }},
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
@@ -168,6 +171,7 @@ class UserTaskController extends Controller
      *     path="/api/v1/users/{username}/tasks/{taskSlug}",
      *     tags={"User tasks"},
      *     summary="Update task status",
+     *     security={{ "apiAuth": {} }},
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
@@ -224,6 +228,7 @@ class UserTaskController extends Controller
      *     path="/api/v1/users/{username}/tasks/{taskSlug}",
      *     tags={"User tasks"},
      *     summary="Delete task",
+     *     security={{ "apiAuth": {} }},
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
@@ -260,6 +265,7 @@ class UserTaskController extends Controller
      *     path="/api/v1/users/{username}/tasks/statuses",
      *     tags={"User tasks"},
      *     summary="Task statuses",
+     *     security={{ "apiAuth": {} }},
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
