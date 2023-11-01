@@ -2,21 +2,15 @@
 
 namespace App\Http\Requests\Api\V1\User;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UserTaskRequest extends FormRequest
+class UserTaskRequest extends BaseRequest
 {
     public function authorize(): bool
     {
         return Auth::user()->username === $this->route('user');
     }
 
-    protected function failedAuthorization()
-    {
-        throw new HttpResponseException(response()->json([
-            'message' => 'This action is unauthorized.'
-        ], 403));
-    }
+
 }

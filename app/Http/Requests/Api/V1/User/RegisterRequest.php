@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\User;
 
-use App\Helpers\ValidationHelper;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Support\Facades\Hash;
 
-class RegisterRequest extends FormRequest
+class RegisterRequest extends BaseRequest
 {
     public function authorize(): bool
     {
@@ -31,15 +28,5 @@ class RegisterRequest extends FormRequest
         return array_merge($validated, [
             'password' => Hash::make($validated['password'])
         ]);
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $failedRules = $validator->failed();
-
-        throw new HttpResponseException(response()->json([
-            'message' => 'Unprocessable Content.',
-            'type' => ValidationHelper::getErrorType($failedRules)
-        ], 422));
     }
 }

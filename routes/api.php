@@ -39,4 +39,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users/{user}/tasks/statuses', 'UserTaskController@statuses');
     Route::apiResource('users.tasks', 'UserTaskController')
         ->parameters(['user' => 'user:username', 'task' => 'task:slug']);
+
+    Route::controller('ProfileController')->prefix('profile')->group(function () {
+        Route::get('/', 'show');
+        Route::put('/', 'update');
+    });
 });
