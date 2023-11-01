@@ -43,5 +43,6 @@ Route::middleware('auth:api')->group(function () {
     Route::controller('ProfileController')->prefix('profile')->group(function () {
         Route::get('/', 'show');
         Route::put('/', 'update');
+        Route::put('password', 'updatePassword');
     });
 });

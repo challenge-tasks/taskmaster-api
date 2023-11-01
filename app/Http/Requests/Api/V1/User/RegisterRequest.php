@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\User;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 
-class RegisterRequest extends BaseRequest
+class RegisterRequest extends FormRequest
 {
     public function authorize(): bool
     {

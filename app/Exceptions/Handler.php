@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Enums\ErrorTypeEnum;
+use App\Helpers\ValidationHelper;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -57,10 +58,6 @@ class Handler extends ExceptionHandler
             $e = $this->unauthenticated($request, $e);
         }
 
-        if ($e instanceof ValidationException) {
-            $e = $this->convertValidationExceptionToResponse($e, $request);
-        }
-
         return $this->apiResponse($e);
     }
 
@@ -72,40 +69,21 @@ class Handler extends ExceptionHandler
 
         if (method_exists($e, 'getStatusCode')) {
             $status = $e->getStatusCode();
+        } else if ($e instanceof ValidationException) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
         } else {
             $status = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
-        switch ($status) {
-            case Response::HTTP_BAD_REQUEST:
-                $data['type'] = ErrorTypeEnum::BAD_REQUEST;
-                break;
-
-            case Response::HTTP_UNAUTHORIZED:
-                $data['type'] = ErrorTypeEnum::UNAUTHORIZED;
-                break;
-
-            case Response::HTTP_FORBIDDEN:
-                $data['type'] = ErrorTypeEnum::FORBIDDEN;
-                break;
-
-            case Response::HTTP_NOT_FOUND:
-                $data['type'] = ErrorTypeEnum::NOT_FOUND;
-                break;
-
-            case Response::HTTP_METHOD_NOT_ALLOWED:
-                $data['type'] = ErrorTypeEnum::METHOD_NOT_ALLOWED;
-                break;
-
-            case Response::HTTP_UNPROCESSABLE_ENTITY:
-                $data['type'] = ErrorTypeEnum::VALIDATION_ERROR->value;
-                $data['errors'] = $e->original['errors'];
-
-                break;
-
-            default:
-                $data['type'] = ErrorTypeEnum::SERVER_ERROR;
-        }
+        $data['type'] = match ($status) {
+            Response::HTTP_BAD_REQUEST => ErrorTypeEnum::BAD_REQUEST,
+            Response::HTTP_UNAUTHORIZED => ErrorTypeEnum::UNAUTHORIZED,
+            Response::HTTP_FORBIDDEN => ErrorTypeEnum::FORBIDDEN,
+            Response::HTTP_NOT_FOUND => ErrorTypeEnum::NOT_FOUND,
+            Response::HTTP_METHOD_NOT_ALLOWED => ErrorTypeEnum::METHOD_NOT_ALLOWED,
+            Response::HTTP_UNPROCESSABLE_ENTITY => ValidationHelper::getErrorType($e->validator->failed()),
+            default => ErrorTypeEnum::SERVER_ERROR,
+        };
 
         return response()->json($data, $status);
     }
