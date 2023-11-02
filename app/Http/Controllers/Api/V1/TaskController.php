@@ -70,7 +70,8 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 25);
-        $query = Task::published()
+        $query = Task::query()
+            ->published()
             ->with(['stacks', 'tags'])
             ->latest('updated_at');
 
@@ -93,12 +94,14 @@ class TaskController extends Controller
     {
         $difficulties = DifficultyEnum::filterOptions();
 
-        $stacks = Stack::selectRaw('slug as value, name as label')
+        $stacks = Stack::query()
+            ->selectRaw('slug as value, name as label')
             ->whereHas('tasks')
             ->limit(10)
             ->get();
 
-        $tags = Tag::selectRaw('slug as value, name as label')
+        $tags = Tag::query()
+            ->selectRaw('slug as value, name as label')
             ->whereHas('tasks')
             ->limit(10)
             ->get();
@@ -146,7 +149,7 @@ class TaskController extends Controller
      */
     public function show(string $slug)
     {
-        $task = Task::where('slug', $slug)->firstOrFail();
+        $task = Task::query()->where('slug', $slug)->firstOrFail();
 
         return TaskResource::make($task);
     }

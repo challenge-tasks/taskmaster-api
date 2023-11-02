@@ -88,7 +88,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        $user = User::create($credentials);
+        $user = User::query()->create($credentials);
         $token = $user->createToken('MyApp')->accessToken;
 
         $user->assignRole(RoleEnum::USER->value);

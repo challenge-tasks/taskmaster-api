@@ -34,7 +34,8 @@ class TagController extends Controller
 
         $q = $request->input('q');
 
-        $tags = Tag::select(['id', 'slug', 'name'])
+        $tags = Tag::query()
+            ->select(['id', 'slug', 'name'])
             ->where('name', 'LIKE', '%' . $q . '%')
             ->orWhere('slug', 'LIKE', '%' . $q . '%')
             ->limit(10)
