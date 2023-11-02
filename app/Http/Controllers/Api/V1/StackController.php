@@ -34,7 +34,8 @@ class StackController extends Controller
 
         $q = $request->input('q');
 
-        $stacks = Stack::select(['id', 'slug', 'name'])
+        $stacks = Stack::query()
+            ->select(['id', 'slug', 'name'])
             ->where('name', 'LIKE', '%' . $q . '%')
             ->orWhere('slug', 'LIKE', '%' . $q . '%')
             ->limit(10)

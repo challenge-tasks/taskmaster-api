@@ -79,7 +79,7 @@ class UserTaskController extends Controller
     {
         $perPage = $request->input('per_page', 25);
 
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::query()->where('username', $username)->firstOrFail();
         $tasks = $user->tasks()->with(['stacks', 'tags'])->where('tasks.status', TaskStatusEnum::PUBLISHED);
         $tasks = TaskQueryService::filter($tasks)->paginate($perPage);
 
@@ -121,7 +121,7 @@ class UserTaskController extends Controller
             'task_id' => ['required', 'exists:tasks,id']
         ]);
 
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::query()->where('username', $username)->firstOrFail();
         $user->tasks()->sync($request->input('task_id'), false);
 
         return response()->json([
@@ -160,7 +160,7 @@ class UserTaskController extends Controller
      */
     public function show(UserTaskRequest $request, string $username, string $taskSlug)
     {
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::query()->where('username', $username)->firstOrFail();
         $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
 
         return TaskResource::make($task);
@@ -209,7 +209,7 @@ class UserTaskController extends Controller
             'status' => ['required']
         ]);
 
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::query()->where('username', $username)->firstOrFail();
         $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
 
         $user->tasks()->updateExistingPivot($task, [
@@ -252,7 +252,7 @@ class UserTaskController extends Controller
      */
     public function destroy(UserTaskRequest $request, string $username, string $taskSlug)
     {
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::query()->where('username', $username)->firstOrFail();
         $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
 
         $user->tasks()->detach($task);
