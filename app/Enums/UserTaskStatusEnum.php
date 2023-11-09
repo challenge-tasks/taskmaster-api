@@ -24,19 +24,23 @@ enum UserTaskStatusEnum: int
         return [
             [
                 'value' => self::TODO->value,
-                'label' => 'Нужно сделать'
+                'label' => 'Нужно сделать',
+                'slug' => 'todo'
             ],
             [
                 'value' => self::IN_DEVELOPMENT->value,
-                'label' => 'В процессе'
+                'label' => 'В процессе',
+                'slug' => 'in_development'
             ],
             [
                 'value' => self::REVIEWING->value,
-                'label' => 'На проверке'
+                'label' => 'На проверке',
+                'slug' => 'reviewing'
             ],
             [
                 'value' => self::DONE->value,
-                'label' => 'Готово'
+                'label' => 'Готово',
+                'slug' => 'done'
             ]
         ];
     }
@@ -44,20 +48,20 @@ enum UserTaskStatusEnum: int
     public static function labelFromOption(int $status): string
     {
         return match ($status) {
-            self::TODO->value => 'Нужно сделать',
-            self::IN_DEVELOPMENT->value => 'В процессе',
-            self::REVIEWING->value => 'На проверке',
-            self::DONE->value => 'Готово',
+            self::TODO->value => 'todo',
+            self::IN_DEVELOPMENT->value => 'in_development',
+            self::REVIEWING->value => 'reviewing',
+            self::DONE->value => 'done',
         };
     }
 
     public function label(): string
     {
         return match ($this) {
-            self::TODO => 'Нужно сделать',
-            self::IN_DEVELOPMENT => 'В процессе',
-            self::REVIEWING => 'На проверке',
-            self::DONE => 'Готово',
+            self::TODO => 'todo',
+            self::IN_DEVELOPMENT => 'in_development',
+            self::REVIEWING => 'reviewing',
+            self::DONE => 'done',
         };
     }
 }
