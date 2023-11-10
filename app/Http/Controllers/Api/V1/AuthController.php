@@ -92,7 +92,7 @@ class AuthController extends Controller
         $user = User::query()->create($credentials);
         $token = $user->createToken('MyApp')->accessToken;
 
-        $user->assignRole(RoleEnum::USER);
+        $user->assignRole(RoleEnum::USER->value);
 
         return response()->json([
             'data' => [
