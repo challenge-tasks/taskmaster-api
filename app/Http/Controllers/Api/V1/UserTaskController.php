@@ -347,6 +347,10 @@ class UserTaskController extends Controller
                         'task_id' => $task->id,
                         'file' => Storage::disk('public_uploads')->put('solutions', $request->file('file'))
                     ]);
+
+                $user->tasks()->updateExistingPivot($task, [
+                    'status' => UserTaskStatusEnum::REVIEWING->value
+                ]);
             } catch (\Exception $exception) {
                 Log::error($exception->getMessage());
 
