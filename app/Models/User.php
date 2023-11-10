@@ -7,6 +7,8 @@ use App\Enums\RoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -33,7 +35,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'password' => 'hashed',
     ];
 
-    protected static function booted()
+    protected static function booted(): void
     {
         static::creating(function (User $user) {
             $hash = md5($user->email);
@@ -58,7 +60,12 @@ class User extends Authenticatable implements FilamentUser, HasName
         return $this->username;
     }
 
-    public function tasks()
+    public function solutions(): HasMany
+    {
+        return $this->hasMany(Solution::class);
+    }
+
+    public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class)->withPivot('status');
     }

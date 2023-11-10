@@ -19,7 +19,8 @@ class TaskQueryService
                     }
 
                     return $query->whereIn('difficulty', $value);
-                }),
+                })
+                    ->default(request()->input('difficulty')),
 
                 AllowedFilter::callback('tech_stacks', function (Builder $query, mixed $value): Builder {
                     if (! is_array($value)) {
@@ -29,7 +30,8 @@ class TaskQueryService
                     return $query->whereHas('stacks', function (Builder $query) use ($value): Builder {
                         return $query->whereIn('slug', $value);
                     });
-                }),
+                })
+                    ->default(request()->input('tech_stacks')),
 
                 AllowedFilter::callback('tags', function (Builder $query, mixed $value): Builder {
                     if (! is_array($value)) {
@@ -39,7 +41,8 @@ class TaskQueryService
                     return $query->whereHas('tags', function (Builder $query) use ($value): Builder {
                         return $query->whereIn('slug', $value);
                     });
-                }),
+                })
+                    ->default(request()->input('tags')),
             ])
             ->allowedSorts([
                 'id', 'name', 'difficulty', 'created_at', 'updated_at'

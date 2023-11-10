@@ -46,6 +46,14 @@ class ValidationHelper
             $type = ErrorTypeEnum::PASSWORD_NOT_CONFIRMED;
         }
 
+        else if (isset($failedRules['file']['Required'])) {
+            $type = ErrorTypeEnum::FILE_REQUIRED;
+        }
+
+        else if (isset($failedRules['file']['Mimes'])) {
+            $type = ErrorTypeEnum::FILE_MUST_BE_RAR_OR_ZIP;
+        }
+
         return $type;
     }
 }

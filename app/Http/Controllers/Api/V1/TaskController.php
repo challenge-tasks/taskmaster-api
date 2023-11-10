@@ -55,13 +55,13 @@ class TaskController extends Controller
      *          @OA\Examples(example="-updated_at", value="-updated_at", summary="-updated_at")
      *     ),
      *     @OA\Parameter(
-     *          description="Filter. You can pass multiple values like ?filter[difficulty]=1,2,3",
+     *          description="Filter. You can pass multiple values like ?difficulty=1,2,3",
      *          in="query",
      *          name="filter",
      *          required=false,
      *          @OA\Schema(
      *              type="object",
-     *              @OA\Property(property="filter[difficulty]", type="int", example="1"),
+     *              @OA\Property(property="difficulty", type="int", example="1"),
      *          ),
      *     ),
      *     @OA\Response(response="200", description="Success"),

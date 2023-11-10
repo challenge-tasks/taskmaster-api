@@ -7,6 +7,7 @@ use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
@@ -56,17 +57,22 @@ class Task extends Model
         return $this->hasMany(TaskImage::class);
     }
 
-    public function stacks()
+    public function solutions(): HasMany
+    {
+        return $this->hasMany(Solution::class);
+    }
+
+    public function stacks(): BelongsToMany
     {
         return $this->belongsToMany(Stack::class);
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }

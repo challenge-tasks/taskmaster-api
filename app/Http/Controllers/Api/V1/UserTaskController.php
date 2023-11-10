@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\TaskStatusEnum;
 use App\Enums\UserTaskStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Solution\StoreSolutionRequest;
 use App\Http\Requests\Api\V1\User\UserTaskRequest;
 use App\Http\Resources\Api\V1\Task\TaskListResource;
 use App\Http\Resources\Api\V1\Task\TaskResource;
+use App\Models\Solution;
 use App\Models\User;
 use App\Services\Task\TaskQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UserTaskController extends Controller
 {
@@ -63,13 +67,13 @@ class UserTaskController extends Controller
      *          @OA\Examples(example="-updated_at", value="-updated_at", summary="-updated_at")
      *     ),
      *     @OA\Parameter(
-     *          description="Filter. You can pass multiple values like ?filter[difficulty]=1,2,3",
+     *          description="Filter. You can pass multiple values like ?difficulty=1,2,3",
      *          in="query",
      *          name="filter",
      *          required=false,
      *          @OA\Schema(
      *              type="object",
-     *              @OA\Property(property="filter[difficulty]", type="int", example="1"),
+     *              @OA\Property(property="difficulty", type="int", example="1"),
      *          ),
      *     ),
      *     @OA\Response(response="200", description="Success"),
@@ -286,5 +290,75 @@ class UserTaskController extends Controller
         return response()->json([
             'data' => UserTaskStatusEnum::filterOptions()
         ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/users/{username}/tasks/{taskSlug}/solutions",
+     *     tags={"User tasks"},
+     *     summary="Upload task solution",
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter(
+     *          description="Username",
+     *          in="path",
+     *          name="username",
+     *          required=true,
+     *          @OA\Schema(type="string"),
+     *          @OA\Examples(example="johndoe", value="johndoe", summary="johndoe"),
+     *     ),
+     *     @OA\Parameter(
+     *          description="Task slug",
+     *          in="path",
+     *          name="taskSlug",
+     *          required=true,
+     *          @OA\Schema(type="string"),
+     *          @OA\Examples(example="first-task", value="first-task", summary="first-task"),
+     *     ),
+     *     @OA\Parameter(
+     *          description="File (zip/rar)",
+     *          in="query",
+     *          name="file",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="object",
+     *              @OA\Property(property="file", type="int", example="solution.zip"),
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Not found"),
+     *     @OA\Response(response="500", description="Server error")
+     * )
+     */
+    public function storeSolution(StoreSolutionRequest $request, string $username, string $taskSlug): JsonResponse
+    {
+        $user = User::query()->where('username', $username)->firstOrFail();
+        $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+
+        $solutionUploaded = Solution::query()
+            ->where('user_id', $user->id)
+            ->where('task_id', $task->id)
+            ->exists();
+
+        if (! $solutionUploaded) {
+            try {
+                Solution::query()
+                    ->create([
+                        'user_id' => $user->id,
+                        'task_id' => $task->id,
+                        'file' => Storage::disk('public_uploads')->put('solutions', $request->file('file'))
+                    ]);
+            } catch (\Exception $exception) {
+                Log::error($exception->getMessage());
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $exception->getMessage()
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true
+        ], 201);
     }
 }

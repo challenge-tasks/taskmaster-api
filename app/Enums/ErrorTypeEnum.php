@@ -24,4 +24,6 @@ enum ErrorTypeEnum: string
     case INCORRECT_PASSWORD = 'incorrect_password';
     case USERNAME_REQUIRED = 'username_required';
     case USERNAME_EXISTS = 'username_exists';
+    case FILE_REQUIRED = 'file_required';
+    case FILE_MUST_BE_RAR_OR_ZIP = 'file_must_be_rar_or_zip';
 }

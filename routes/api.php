@@ -36,7 +36,8 @@ Route::controller('TagController')->prefix('tags')->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', 'AuthController@logout');
 
-    Route::get('users/{user}/tasks/statuses', 'UserTaskController@statuses');
+    Route::get('users/{user:username}/tasks/statuses', 'UserTaskController@statuses');
+    Route::post('users/{user:username}/tasks/{task:slug}/solutions', 'UserTaskController@storeSolution');
     Route::apiResource('users.tasks', 'UserTaskController')
         ->parameters(['user' => 'user:username', 'task' => 'task:slug']);
 
