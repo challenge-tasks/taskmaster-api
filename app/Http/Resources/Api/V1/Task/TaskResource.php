@@ -38,8 +38,7 @@ class TaskResource extends JsonResource
         ];
 
         if ($this->pivot && $this->pivot->status) {
-            $statuses = UserTaskStatusEnum::options();
-            $data['status'] = $statuses[$this->pivot->status];
+            $data['status'] = UserTaskStatusEnum::labelFromOption($this->pivot->status);
         }
 
         return $data;

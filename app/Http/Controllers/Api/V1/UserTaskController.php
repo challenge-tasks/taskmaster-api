@@ -10,6 +10,8 @@ use App\Http\Resources\Api\V1\Task\TaskListResource;
 use App\Http\Resources\Api\V1\Task\TaskResource;
 use App\Models\User;
 use App\Services\Task\TaskQueryService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserTaskController extends Controller
 {
@@ -75,7 +77,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function index(UserTaskRequest $request, string $username)
+    public function index(UserTaskRequest $request, string $username): AnonymousResourceCollection
     {
         $perPage = $request->input('per_page', 25);
 
@@ -115,7 +117,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function store(UserTaskRequest $request, string $username)
+    public function store(UserTaskRequest $request, string $username): JsonResponse
     {
         $request->validate([
             'task_id' => ['required', 'exists:tasks,id']
@@ -158,7 +160,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function show(UserTaskRequest $request, string $username, string $taskSlug)
+    public function show(UserTaskRequest $request, string $username, string $taskSlug): TaskResource
     {
         $user = User::query()->where('username', $username)->firstOrFail();
         $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
@@ -203,7 +205,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function update(UserTaskRequest $request, string $username, string $taskSlug)
+    public function update(UserTaskRequest $request, string $username, string $taskSlug): JsonResponse
     {
         $request->validate([
             'status' => ['required']
@@ -250,7 +252,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function destroy(UserTaskRequest $request, string $username, string $taskSlug)
+    public function destroy(UserTaskRequest $request, string $username, string $taskSlug): JsonResponse
     {
         $user = User::query()->where('username', $username)->firstOrFail();
         $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
@@ -279,7 +281,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function statuses(UserTaskRequest $request, string $username)
+    public function statuses(UserTaskRequest $request, string $username): JsonResponse
     {
         return response()->json([
             'data' => UserTaskStatusEnum::filterOptions()

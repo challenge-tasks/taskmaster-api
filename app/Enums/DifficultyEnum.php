@@ -25,23 +25,23 @@ enum DifficultyEnum: int
     {
         return [
             [
-                'value' => self::INTERN->value,
+                'value' => self::INTERN,
                 'label' => 'Intern'
             ],
             [
-                'value' => self::JUNIOR->value,
+                'value' => self::JUNIOR,
                 'label' => 'Junior'
             ],
             [
-                'value' => self::MIDDLE->value,
+                'value' => self::MIDDLE,
                 'label' => 'Middle'
             ],
             [
-                'value' => self::SENIOR->value,
+                'value' => self::SENIOR,
                 'label' => 'Senior'
             ],
             [
-                'value' => self::GURU->value,
+                'value' => self::GURU,
                 'label' => 'Guru'
             ]
         ];

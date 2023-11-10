@@ -9,6 +9,7 @@ use App\Http\Requests\Api\V1\User\LoginRequest;
 use App\Http\Requests\Api\V1\User\RegisterRequest;
 use App\Http\Resources\Api\V1\User\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -37,7 +38,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
 
@@ -84,14 +85,14 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         $credentials = $request->validated();
 
         $user = User::query()->create($credentials);
         $token = $user->createToken('MyApp')->accessToken;
 
-        $user->assignRole(RoleEnum::USER->value);
+        $user->assignRole(RoleEnum::USER);
 
         return response()->json([
             'data' => [
@@ -107,16 +108,6 @@ class AuthController extends Controller
      *     tags={"Auth"},
      *     summary="Log out",
      *     security={{ "apiAuth": {} }},
-     *     @OA\RequestBody(
-     *          required=true,
-     *          description="Pass user credentials",
-     *          @OA\JsonContent(
-     *              required={"first_name", "email", "password"},
-     *              @OA\Property(property="username", type="string", example="johndoe"),
-     *              @OA\Property(property="email", type="string", example="test@gmail.com"),
-     *              @OA\Property(property="password", type="string", example="pass@word"),
-     *          ),
-     *     ),
      *     @OA\Response(
      *          response=200,
      *          description="Successful operation"
@@ -127,7 +118,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         Auth::user()->token()->revoke();
 

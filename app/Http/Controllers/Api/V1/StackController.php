@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Stack;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class StackController extends Controller
@@ -26,7 +27,7 @@ class StackController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $request->validate([
             'q' => 'required'

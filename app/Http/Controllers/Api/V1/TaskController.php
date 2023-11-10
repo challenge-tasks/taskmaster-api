@@ -10,7 +10,9 @@ use App\Models\Stack;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Services\Task\TaskQueryService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
@@ -67,9 +69,10 @@ class TaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $perPage = $request->input('per_page', 25);
+
         $query = Task::query()
             ->published()
             ->with(['stacks', 'tags'])
@@ -90,7 +93,7 @@ class TaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function filter()
+    public function filter(): JsonResponse
     {
         $difficulties = DifficultyEnum::filterOptions();
 
@@ -147,7 +150,7 @@ class TaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function show(string $slug)
+    public function show(string $slug): TaskResource
     {
         $task = Task::query()->where('slug', $slug)->firstOrFail();
 

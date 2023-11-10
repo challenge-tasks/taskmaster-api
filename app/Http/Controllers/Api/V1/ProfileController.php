@@ -21,7 +21,7 @@ class ProfileController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function show()
+    public function show(): UserResource
     {
         $user = Auth::user();
 
@@ -50,7 +50,7 @@ class ProfileController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function update(Request $request)
+    public function update(Request $request): UserResource
     {
         $user = Auth::user();
 
@@ -86,7 +86,7 @@ class ProfileController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): UserResource
     {
         $request->validate([
             'password' => ['required', 'min:8', 'max:100', 'confirmed']
