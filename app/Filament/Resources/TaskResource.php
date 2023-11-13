@@ -119,7 +119,7 @@ class TaskResource extends Resource
                     ->options(TaskStatusEnum::options()),
 
                 Tables\Filters\SelectFilter::make('difficulty')
-                    ->options(TaskStatusEnum::options()),
+                    ->options(DifficultyEnum::options()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

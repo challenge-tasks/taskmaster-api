@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Solution extends Model
 {
@@ -15,6 +16,15 @@ class Solution extends Model
         'task_id',
         'file'
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Solution $solution) {
+            if ($solution->file && Storage::exists($solution->file)) {
+                Storage::delete($solution->getOriginal('file'));
+            }
+        });
+    }
 
     public function user(): BelongsTo
     {
