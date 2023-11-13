@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\Task\TaskQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -127,7 +128,10 @@ class UserTaskController extends Controller
             'task_id' => ['required', 'exists:tasks,id']
         ]);
 
-        $user = User::query()->where('username', $username)->firstOrFail();
+        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
+            return User::query()->where('username', $username)->firstOrFail();
+        });
+
         $user->tasks()->sync($request->input('task_id'), false);
 
         return response()->json([
@@ -166,8 +170,13 @@ class UserTaskController extends Controller
      */
     public function show(UserTaskRequest $request, string $username, string $taskSlug): TaskResource
     {
-        $user = User::query()->where('username', $username)->firstOrFail();
-        $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
+            return User::query()->where('username', $username)->firstOrFail();
+        });
+
+        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+            return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        });
 
         return TaskResource::make($task);
     }
@@ -215,8 +224,13 @@ class UserTaskController extends Controller
             'status' => ['required']
         ]);
 
-        $user = User::query()->where('username', $username)->firstOrFail();
-        $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
+            return User::query()->where('username', $username)->firstOrFail();
+        });
+
+        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+            return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        });
 
         $user->tasks()->updateExistingPivot($task, [
             'status' => $request->input('status')
@@ -258,8 +272,13 @@ class UserTaskController extends Controller
      */
     public function destroy(UserTaskRequest $request, string $username, string $taskSlug): JsonResponse
     {
-        $user = User::query()->where('username', $username)->firstOrFail();
-        $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
+            return User::query()->where('username', $username)->firstOrFail();
+        });
+
+        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+            return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        });
 
         $user->tasks()->detach($task);
 
@@ -331,8 +350,13 @@ class UserTaskController extends Controller
      */
     public function storeSolution(StoreSolutionRequest $request, string $username, string $taskSlug): JsonResponse
     {
-        $user = User::query()->where('username', $username)->firstOrFail();
-        $task = $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
+            return User::query()->where('username', $username)->firstOrFail();
+        });
+
+        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+            return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
+        });
 
         $solutionUploaded = Solution::query()
             ->where('user_id', $user->id)

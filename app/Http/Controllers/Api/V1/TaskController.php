@@ -13,6 +13,7 @@ use App\Services\Task\TaskQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
@@ -97,17 +98,21 @@ class TaskController extends Controller
     {
         $difficulties = DifficultyEnum::filterOptions();
 
-        $stacks = Stack::query()
-            ->selectRaw('slug as value, name as label')
-            ->whereHas('tasks')
-            ->limit(10)
-            ->get();
+        $stacks = Cache::remember('filter_stacks', now()->addHour(), function () {
+            return Stack::query()
+                ->selectRaw('slug as value, name as label')
+                ->whereHas('tasks')
+                ->limit(10)
+                ->get();
+        });
 
-        $tags = Tag::query()
-            ->selectRaw('slug as value, name as label')
-            ->whereHas('tasks')
-            ->limit(10)
-            ->get();
+        $tags = Cache::remember('filter_tags', now()->addHour(), function () {
+            return Tag::query()
+                ->selectRaw('slug as value, name as label')
+                ->whereHas('tasks')
+                ->limit(10)
+                ->get();
+        });
 
         $data = [
             'difficulties' => [
@@ -152,7 +157,9 @@ class TaskController extends Controller
      */
     public function show(string $slug): TaskResource
     {
-        $task = Task::query()->where('slug', $slug)->firstOrFail();
+        $task = Cache::remember('task_' . $slug, now()->addHour(), function () use ($slug) {
+            return Task::query()->where('slug', $slug)->firstOrFail();
+        });
 
         return TaskResource::make($task);
     }
