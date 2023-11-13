@@ -12,6 +12,7 @@ use App\Http\Resources\Api\V1\Task\TaskResource;
 use App\Models\Solution;
 use App\Models\User;
 use App\Services\Task\TaskQueryService;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
@@ -87,7 +88,15 @@ class UserTaskController extends Controller
         $perPage = $request->input('per_page', 25);
 
         $user = User::query()->where('username', $username)->firstOrFail();
-        $tasks = $user->tasks()->with(['stacks', 'tags'])->where('tasks.status', TaskStatusEnum::PUBLISHED);
+
+        $tasks = $user->tasks()
+            ->with([
+                'stacks',
+                'tags',
+                'solutions' => fn(HasMany $query) => $query->where('user_id', $user->id)
+            ])
+            ->where('tasks.status', TaskStatusEnum::PUBLISHED);
+
         $tasks = TaskQueryService::filter($tasks)->paginate($perPage);
 
         return TaskListResource::collection($tasks);

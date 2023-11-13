@@ -39,6 +39,13 @@ class TaskListResource extends JsonResource
             $data['status'] = UserTaskStatusEnum::labelFromOption($this->pivot->status);
         }
 
+        if ($this->relationLoaded('solutions')) {
+            $solution = $this->solutions->first();
+
+            $data['rating'] = $solution['rating'] ?? null;
+            $data['comment'] = $solution['comment'] ?? null;
+        }
+
         return $data;
     }
 }
