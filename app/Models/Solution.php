@@ -15,7 +15,9 @@ class Solution extends Model
         'user_id',
         'task_id',
         'file',
-        'is_checked'
+        'is_checked',
+        'rating',
+        'comment',
     ];
 
     protected static function booted(): void

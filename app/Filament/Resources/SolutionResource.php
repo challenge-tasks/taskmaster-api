@@ -75,9 +75,21 @@ class SolutionResource extends Resource
                     ->color('warning'),
 
                 Tables\Actions\Action::make('Mark as done')
-                    ->action(function ($record) {
+                    ->form([
+                        Forms\Components\TextInput::make('rating')
+                            ->label('Rating (1-5)')
+                            ->type('number')
+                            ->required()
+                            ->minValue(1)
+                            ->maxValue(5),
+
+                        Forms\Components\Textarea::make('comment')
+                    ])
+                    ->action(function (Solution $record, array $data) {
                         $record->update([
-                            'is_checked' => true
+                            'is_checked' => true,
+                            'rating' => intval($data['rating']),
+                            'comment' => $data['comment']
                         ]);
 
                         TaskUser::query()
