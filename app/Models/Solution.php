@@ -14,7 +14,8 @@ class Solution extends Model
     protected $fillable = [
         'user_id',
         'task_id',
-        'file'
+        'file',
+        'is_checked'
     ];
 
     protected static function booted(): void

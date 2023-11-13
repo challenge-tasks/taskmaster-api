@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserTaskStatusEnum;
 use App\Filament\Resources\SolutionResource\Pages;
 use App\Models\Solution;
+use App\Models\TaskUser;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -40,12 +43,15 @@ class SolutionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.id')
                     ->label('User ID')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('task.name')
                     ->searchable(),
+
+                Tables\Columns\IconColumn::make('is_checked')
+                    ->trueIcon('heroicon-o-check-circle'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -66,7 +72,30 @@ class SolutionResource extends Resource
                         return response()->download($file);
                     })
                     ->icon('heroicon-o-download')
-                    ->color('success'),
+                    ->color('warning'),
+
+                Tables\Actions\Action::make('Mark as done')
+                    ->action(function ($record) {
+                        $record->update([
+                            'is_checked' => true
+                        ]);
+
+                        TaskUser::query()
+                            ->where('task_id', $record->task_id)
+                            ->where('user_id', $record->user_id)
+                            ->update([
+                                'status' => UserTaskStatusEnum::DONE->value
+                            ]);
+                    })
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->hidden(fn($record) => $record->is_checked)
+                    ->after(function () {
+                        Notification::make()
+                            ->title('Successfully marked as done')
+                            ->success()
+                            ->send();
+                    }),
 
                 Tables\Actions\DeleteAction::make()
             ])
