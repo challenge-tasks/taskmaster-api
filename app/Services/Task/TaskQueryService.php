@@ -14,6 +14,10 @@ class TaskQueryService
         return QueryBuilder::for($query)
             ->allowedFilters([
                 AllowedFilter::callback('difficulty', function (Builder $query, mixed $value): Builder {
+                    if (is_string($value) && str_contains($value, ',')) {
+                        $value = explode(',', $value);
+                    }
+
                     if (! is_array($value)) {
                         $value = [$value];
                     }
@@ -23,6 +27,10 @@ class TaskQueryService
                     ->default(request()->input('difficulty')),
 
                 AllowedFilter::callback('tech_stacks', function (Builder $query, mixed $value): Builder {
+                    if (is_string($value) && str_contains($value, ',')) {
+                        $value = explode(',', $value);
+                    }
+
                     if (! is_array($value)) {
                         $value = [$value];
                     }
@@ -34,6 +42,10 @@ class TaskQueryService
                     ->default(request()->input('tech_stacks')),
 
                 AllowedFilter::callback('tags', function (Builder $query, mixed $value): Builder {
+                    if (is_string($value) && str_contains($value, ',')) {
+                        $value = explode(',', $value);
+                    }
+
                     if (! is_array($value)) {
                         $value = [$value];
                     }

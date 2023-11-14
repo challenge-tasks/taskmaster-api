@@ -76,6 +76,8 @@ class UserTaskController extends Controller
      *          @OA\Schema(
      *              type="object",
      *              @OA\Property(property="difficulty", type="int", example="1"),
+     *              @OA\Property(property="tech_stacks", type="int", example="1"),
+     *              @OA\Property(property="tags", type="int", example="1"),
      *          ),
      *     ),
      *     @OA\Response(response="200", description="Success"),
