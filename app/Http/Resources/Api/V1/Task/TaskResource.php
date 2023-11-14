@@ -34,6 +34,9 @@ class TaskResource extends JsonResource
                     'name' => $tag->name
                 ];
             }),
+            'status' => null,
+            'rating' => null,
+            'comment' => null,
             'created_at' => strtotime($this->created_at),
             'updated_at' => strtotime($this->updated_at),
         ];
@@ -41,13 +44,13 @@ class TaskResource extends JsonResource
         if ($this->pivot && $this->pivot->status) {
             $data['status'] = UserTaskStatusEnum::labelFromOption($this->pivot->status);
 
-            $rating = Solution::query()
+            $solution = Solution::query()
                 ->where('user_id', $this->pivot->user_id)
                 ->where('task_id', $this->id)
                 ->first();
 
-            $data['rating'] = $rating['rating'] ?? null;
-            $data['comment'] = $rating['comment'] ?? null;
+            $data['rating'] = $solution['rating'] ?? null;
+            $data['comment'] = $solution['comment'] ?? null;
         }
 
         return $data;

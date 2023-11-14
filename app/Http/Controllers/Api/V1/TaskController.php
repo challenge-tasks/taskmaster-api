@@ -13,6 +13,7 @@ use App\Services\Task\TaskQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
@@ -160,6 +161,14 @@ class TaskController extends Controller
         $task = Cache::remember('task_' . $slug, now()->addHour(), function () use ($slug) {
             return Task::query()->where('slug', $slug)->firstOrFail();
         });
+
+        if (Auth::guard('api')->check() && $task->isBelongsToUser()) {
+            $user = Auth::guard('api')->user();
+
+            $task = Cache::remember($user->username . '_task_' . $slug, now()->addHour(), function () use ($user, $slug) {
+                return $user->tasks()->where('slug', $slug)->firstOrFail();
+            });
+        }
 
         return TaskResource::make($task);
     }

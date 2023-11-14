@@ -156,6 +156,7 @@ class UserTaskController extends Controller
      *     tags={"User tasks"},
      *     summary="Show task",
      *     security={{ "apiAuth": {} }},
+     *     deprecated=true,
      *     @OA\Parameter(
      *          description="Username",
      *          in="path",
@@ -183,7 +184,7 @@ class UserTaskController extends Controller
             return User::query()->where('username', $username)->firstOrFail();
         });
 
-        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+        $task = Cache::remember($user->username . '_task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
             return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
         });
 
@@ -237,7 +238,7 @@ class UserTaskController extends Controller
             return User::query()->where('username', $username)->firstOrFail();
         });
 
-        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+        $task = Cache::remember($user->username . '_task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
             return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
         });
 
@@ -285,7 +286,7 @@ class UserTaskController extends Controller
             return User::query()->where('username', $username)->firstOrFail();
         });
 
-        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+        $task = Cache::remember($user->username . '_task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
             return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
         });
 
@@ -363,7 +364,7 @@ class UserTaskController extends Controller
             return User::query()->where('username', $username)->firstOrFail();
         });
 
-        $task = Cache::remember('task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
+        $task = Cache::remember($user->username . '_task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
             return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
         });
 

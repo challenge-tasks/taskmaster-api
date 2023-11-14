@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -95,5 +96,12 @@ class Task extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->preventOverwrite();
+    }
+
+    public function isBelongsToUser(): bool
+    {
+        $userId = Auth::guard('api')->id();
+
+        return $this->users()->where('user_id', $userId)->exists();
     }
 }
