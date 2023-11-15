@@ -147,7 +147,7 @@ class UserTaskController extends Controller
 
         return response()->json([
             'data' => [
-                'status' => UserTaskStatusEnum::TODO->label()
+                'status' => UserTaskStatusEnum::IN_DEVELOPMENT->label()
             ]
         ], 201);
     }
