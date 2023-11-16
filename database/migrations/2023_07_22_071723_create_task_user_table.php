@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\Task::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('status')->default(\App\Enums\UserTaskStatusEnum::TODO->value);
+            $table->unsignedTinyInteger('status')->default(\App\Enums\UserTaskStatusEnum::IN_DEVELOPMENT->value);
             $table->timestamps();
         });
     }

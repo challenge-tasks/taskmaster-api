@@ -58,6 +58,7 @@ class TaskQueryService
             ])
             ->allowedSorts([
                 'id', 'name', 'difficulty', 'created_at', 'updated_at'
-            ]);
+            ])
+            ->defaultSort('-id');
     }
 }
