@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\TaskStatusEnum;
 use App\Enums\UserTaskStatusEnum;
+use App\Events\UserTaskDeletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Solution\StoreSolutionRequest;
 use App\Http\Requests\Api\V1\User\UserTaskRequest;
@@ -11,6 +12,7 @@ use App\Http\Resources\Api\V1\Task\TaskListResource;
 use App\Http\Resources\Api\V1\Task\TaskResource;
 use App\Models\Solution;
 use App\Models\User;
+use App\Services\Solution\SolutionService;
 use App\Services\Task\TaskQueryService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
@@ -153,109 +155,6 @@ class UserTaskController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/v1/users/{username}/tasks/{taskSlug}",
-     *     tags={"User tasks"},
-     *     summary="Show task",
-     *     security={{ "apiAuth": {} }},
-     *     deprecated=true,
-     *     @OA\Parameter(
-     *          description="Username",
-     *          in="path",
-     *          name="username",
-     *          required=true,
-     *          @OA\Schema(type="string"),
-     *          @OA\Examples(example="johndoe", value="johndoe", summary="johndoe"),
-     *     ),
-     *     @OA\Parameter(
-     *          description="Task slug",
-     *          in="path",
-     *          name="taskSlug",
-     *          required=true,
-     *          @OA\Schema(type="string"),
-     *          @OA\Examples(example="first-task", value="first-task", summary="first-task"),
-     *     ),
-     *     @OA\Response(response="200", description="Success"),
-     *     @OA\Response(response="404", description="Not found"),
-     *     @OA\Response(response="500", description="Server error")
-     * )
-     */
-    public function show(UserTaskRequest $request, string $username, string $taskSlug): TaskResource
-    {
-        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
-            return User::query()->where('username', $username)->firstOrFail();
-        });
-
-        $task = Cache::remember($user->username . '_task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
-            return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
-        });
-
-        return TaskResource::make($task);
-    }
-
-    /**
-     * @OA\Put(
-     *     path="/api/v1/users/{username}/tasks/{taskSlug}",
-     *     tags={"User tasks"},
-     *     summary="Update task status",
-     *     security={{ "apiAuth": {} }},
-     *     @OA\Parameter(
-     *          description="Username",
-     *          in="path",
-     *          name="username",
-     *          required=true,
-     *          @OA\Schema(type="string"),
-     *          @OA\Examples(example="johndoe", value="johndoe", summary="johndoe"),
-     *     ),
-     *     @OA\Parameter(
-     *          description="Task slug",
-     *          in="path",
-     *          name="taskSlug",
-     *          required=true,
-     *          @OA\Schema(type="string"),
-     *          @OA\Examples(example="first-task", value="first-task", summary="first-task"),
-     *     ),
-     *     @OA\Parameter(
-     *          description="Status",
-     *          in="query",
-     *          name="status",
-     *          required=false,
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(property="status", type="int", example="1"),
-     *          ),
-     *     ),
-     *     @OA\Response(response="200", description="Success"),
-     *     @OA\Response(response="404", description="Not found"),
-     *     @OA\Response(response="500", description="Server error")
-     * )
-     */
-    public function update(UserTaskRequest $request, string $username, string $taskSlug): JsonResponse
-    {
-        $request->validate([
-            'status' => ['required']
-        ]);
-
-        $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
-            return User::query()->where('username', $username)->firstOrFail();
-        });
-
-        $task = Cache::remember($user->username . '_task_' . $taskSlug, now()->addHour(), function () use ($user, $taskSlug) {
-            return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
-        });
-
-        $user->tasks()->updateExistingPivot($task, [
-            'status' => $request->input('status')
-        ]);
-
-        return response()->json([
-            'data' => [
-                'status' => UserTaskStatusEnum::labelFromOption($request->input('status'))
-            ]
-        ]);
-    }
-
-    /**
      * @OA\Delete(
      *     path="/api/v1/users/{username}/tasks/{taskSlug}",
      *     tags={"User tasks"},
@@ -294,33 +193,9 @@ class UserTaskController extends Controller
 
         $user->tasks()->detach($task);
 
-        return response()->json(null, 204);
-    }
+        UserTaskDeletedEvent::dispatch($user->id, $task->id);
 
-    /**
-     * @OA\Get(
-     *     path="/api/v1/users/{username}/tasks/statuses",
-     *     tags={"User tasks"},
-     *     summary="Task statuses",
-     *     security={{ "apiAuth": {} }},
-     *     @OA\Parameter(
-     *          description="Username",
-     *          in="path",
-     *          name="username",
-     *          required=true,
-     *          @OA\Schema(type="string"),
-     *          @OA\Examples(example="johndoe", value="johndoe", summary="johndoe"),
-     *     ),
-     *     @OA\Response(response="200", description="Success"),
-     *     @OA\Response(response="404", description="Not found"),
-     *     @OA\Response(response="500", description="Server error")
-     * )
-     */
-    public function statuses(UserTaskRequest $request, string $username): JsonResponse
-    {
-        return response()->json([
-            'data' => UserTaskStatusEnum::filterOptions()
-        ]);
+        return response()->json(null, 204);
     }
 
     /**
@@ -360,7 +235,7 @@ class UserTaskController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
-    public function storeSolution(StoreSolutionRequest $request, string $username, string $taskSlug): JsonResponse
+    public function storeSolution(StoreSolutionRequest $request, SolutionService $service, string $username, string $taskSlug): JsonResponse
     {
         $user = Cache::remember('user_' . $username, now()->addHour(), function () use ($username) {
             return User::query()->where('username', $username)->firstOrFail();
@@ -370,31 +245,12 @@ class UserTaskController extends Controller
             return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
         });
 
-        $solutionUploaded = Solution::query()
-            ->where('user_id', $user->id)
-            ->where('task_id', $task->id)
-            ->exists();
+        $successfullyUploaded = $service->uploadSolution($request->file('file'), $user->id, $task->id);
 
-        if (! $solutionUploaded) {
-            try {
-                Solution::query()
-                    ->create([
-                        'user_id' => $user->id,
-                        'task_id' => $task->id,
-                        'file' => Storage::disk('public_uploads')->put('solutions', $request->file('file'))
-                    ]);
-
-                $user->tasks()->updateExistingPivot($task, [
-                    'status' => UserTaskStatusEnum::REVIEWING->value
-                ]);
-            } catch (\Exception $exception) {
-                Log::error($exception->getMessage());
-
-                return response()->json([
-                    'success' => false,
-                    'message' => $exception->getMessage()
-                ]);
-            }
+        if ($successfullyUploaded) {
+            $user->tasks()->updateExistingPivot($task, [
+                'status' => UserTaskStatusEnum::REVIEWING->value
+            ]);
         }
 
         return response()->json([
