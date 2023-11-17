@@ -83,7 +83,7 @@ class SolutionResource extends Resource
                             ->minValue(1)
                             ->maxValue(5),
 
-                        Forms\Components\Textarea::make('comment')
+                        Forms\Components\RichEditor::make('comment')
                     ])
                     ->action(function (Solution $record, array $data) {
                         $record->update([
