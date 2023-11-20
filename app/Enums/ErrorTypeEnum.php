@@ -26,4 +26,5 @@ enum ErrorTypeEnum: string
     case USERNAME_EXISTS = 'username_exists';
     case FILE_REQUIRED = 'file_required';
     case FILE_MUST_BE_RAR_OR_ZIP = 'file_must_be_rar_or_zip';
+    case GITHUB_ID_REQUIRED = 'github_id_required';
 }

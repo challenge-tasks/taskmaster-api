@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller('AuthController')->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
+    Route::post('github/login', 'loginViaGithub');
 });
 
 Route::controller('TaskController')->prefix('tasks')->group(function () {

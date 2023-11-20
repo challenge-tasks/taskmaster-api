@@ -10,7 +10,10 @@ use App\Http\Requests\Api\V1\User\RegisterRequest;
 use App\Http\Resources\Api\V1\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -123,5 +126,60 @@ class AuthController extends Controller
         Auth::user()->token()->revoke();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/github/login",
+     *     tags={"Auth"},
+     *     summary="Log in via GitHub",
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Pass user credentials",
+     *          @OA\JsonContent(
+     *              required={"email", "password"},
+     *              @OA\Property(property="username", type="string", example="johndoe"),
+     *              @OA\Property(property="email", type="string", example="admin@gmail.com"),
+     *              @OA\Property(property="github_id", type="int", example="42"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *          response=401,
+     *          description="Auth error"
+     *     )
+     * )
+     */
+    public function loginViaGithub(Request $request): JsonResponse
+    {
+        $request->validate([
+            'username' => 'required',
+            'email' => 'required',
+            'github_id' => 'required'
+        ]);
+
+        $user = User::query()
+            ->where('github_id', $request->input('github_id'))
+            ->first();
+
+        if (! $user) {
+            $user = User::query()
+                ->create([
+                    'username' => $request->input('username'),
+                    'email' => $request->input('email'),
+                    'password' => Hash::make(Str::random()),
+                    'github_id' => $request->input('github_id'),
+                ]);
+        }
+
+        return response()->json([
+            'data' => [
+                'user' => UserResource::make($user),
+                'token' => $user->createToken('MyApp')->accessToken
+            ]
+        ]);
     }
 }
