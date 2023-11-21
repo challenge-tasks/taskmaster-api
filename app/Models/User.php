@@ -38,8 +38,10 @@ class User extends Authenticatable implements FilamentUser, HasName
     protected static function booted(): void
     {
         static::creating(function (User $user) {
-            $hash = md5($user->email);
-            $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+            if (is_null($user->avatar)) {
+                $hash = md5($user->email);
+                $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+            }
         });
 
         static::updating(function (User $user) {
@@ -47,6 +49,10 @@ class User extends Authenticatable implements FilamentUser, HasName
                 $hash = md5($user->email);
                 $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
             }
+        });
+
+        static::deleting(function (User $user) {
+            $user->solutions()->withTrashed()->each(fn(Solution $solution) => $solution->forceDelete());
         });
     }
 

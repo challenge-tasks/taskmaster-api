@@ -137,10 +137,11 @@ class AuthController extends Controller
      *          required=true,
      *          description="Pass user credentials",
      *          @OA\JsonContent(
-     *              required={"email", "password"},
+     *              required={"username", "email", "github_id"},
      *              @OA\Property(property="username", type="string", example="johndoe"),
      *              @OA\Property(property="email", type="string", example="admin@gmail.com"),
      *              @OA\Property(property="github_id", type="int", example="42"),
+     *              @OA\Property(property="avatar", type="string", example="url_to_avatar"),
      *          ),
      *     ),
      *     @OA\Response(
@@ -169,6 +170,7 @@ class AuthController extends Controller
             $user = User::query()
                 ->create([
                     'username' => $request->input('username'),
+                    'avatar' => $request->input('avatar'),
                     'email' => $request->input('email'),
                     'password' => Hash::make(Str::random()),
                     'github_id' => $request->input('github_id'),
