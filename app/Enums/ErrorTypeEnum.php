@@ -27,4 +27,6 @@ enum ErrorTypeEnum: string
     case FILE_REQUIRED = 'file_required';
     case FILE_MUST_BE_RAR_OR_ZIP = 'file_must_be_rar_or_zip';
     case GITHUB_ID_REQUIRED = 'github_id_required';
+    case GITHUB_URL_REQUIRED = 'github_url_required';
+    case SIGN_IN_WITH_PROVIDER_FAILED = 'sign_in_with_provider_failed';
 }

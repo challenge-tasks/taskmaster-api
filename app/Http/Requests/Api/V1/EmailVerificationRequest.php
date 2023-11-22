@@ -2,17 +2,20 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EmailVerificationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if (! hash_equals((string) $this->user()->getKey(), (string) $this->input('id'))) {
+        $user = User::query()->findOrFail($this->input('id'));
+
+        if (! hash_equals((string) $user->getKey(), (string) $this->input('id'))) {
             return false;
         }
 
-        if (! hash_equals(sha1($this->user()->getEmailForVerification()), (string) $this->input('hash'))) {
+        if (! hash_equals(sha1($user->getEmailForVerification()), (string) $this->input('hash'))) {
             return false;
         }
 

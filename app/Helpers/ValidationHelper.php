@@ -58,6 +58,10 @@ class ValidationHelper
             $type = ErrorTypeEnum::GITHUB_ID_REQUIRED;
         }
 
+        else if (isset($failedRules['github_url']['Required'])) {
+            $type = ErrorTypeEnum::GITHUB_URL_REQUIRED;
+        }
+
         return $type;
     }
 }

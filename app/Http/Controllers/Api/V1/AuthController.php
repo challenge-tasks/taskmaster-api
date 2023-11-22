@@ -9,12 +9,11 @@ use App\Http\Requests\Api\V1\User\LoginRequest;
 use App\Http\Requests\Api\V1\User\RegisterRequest;
 use App\Http\Resources\Api\V1\User\UserResource;
 use App\Models\User;
+use App\Services\User\GithubUserService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -157,12 +156,13 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function loginViaGithub(Request $request): JsonResponse
+    public function loginViaGithub(Request $request, GithubUserService $service): JsonResponse
     {
         $request->validate([
             'username' => 'required',
             'email' => 'required',
-            'github_id' => 'required'
+            'github_id' => 'required',
+            'github_url' => 'required',
         ]);
 
         $user = User::query()
@@ -170,14 +170,14 @@ class AuthController extends Controller
             ->first();
 
         if (! $user) {
-            $user = User::query()
-                ->create([
-                    'username' => $request->input('username'),
-                    'avatar' => $request->input('avatar'),
-                    'email' => $request->input('email'),
-                    'password' => Hash::make(Str::random()),
-                    'github_id' => $request->input('github_id'),
+            $user = $service->firstOrCreate($request->all());
+
+            if (! $user) {
+                return response()->json([
+                    'message' => 'Sing in with GitHub failed.',
+                    'type' => ErrorTypeEnum::SIGN_IN_WITH_PROVIDER_FAILED
                 ]);
+            }
         }
 
         return response()->json([

@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +19,8 @@ Route::controller('AuthController')->group(function () {
     Route::post('github/login', 'loginViaGithub');
 });
 
+Route::post('verify-email', 'VerifyEmailController');
+
 Route::controller('TaskController')->prefix('tasks')->group(function () {
     Route::get('/', 'index');
     Route::get('filter', 'filter');
@@ -35,7 +36,6 @@ Route::controller('TagController')->prefix('tags')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('verify-email', 'VerifyEmailController');
     Route::post('logout', 'AuthController@logout');
 
     Route::get('users/{user:username}/tasks/statuses', 'UserTaskController@statuses');
