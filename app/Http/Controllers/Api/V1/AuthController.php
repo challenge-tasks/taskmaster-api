@@ -9,6 +9,7 @@ use App\Http\Requests\Api\V1\User\LoginRequest;
 use App\Http\Requests\Api\V1\User\RegisterRequest;
 use App\Http\Resources\Api\V1\User\UserResource;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -96,6 +97,8 @@ class AuthController extends Controller
         $token = $user->createToken('MyApp')->accessToken;
 
         $user->assignRole(RoleEnum::USER->value);
+
+        event(new Registered($user));
 
         return response()->json([
             'data' => [

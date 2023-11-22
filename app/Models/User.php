@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\EmailVerificationNotification;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\RoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -14,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasName
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasName
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
@@ -23,7 +24,8 @@ class User extends Authenticatable implements FilamentUser, HasName
         'avatar',
         'email',
         'password',
-        'github_id'
+        'github_id',
+        'github_url',
     ];
 
     protected $hidden = [
@@ -65,6 +67,11 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function getFilamentName(): string
     {
         return $this->username;
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new EmailVerificationNotification());
     }
 
     public function solutions(): HasMany

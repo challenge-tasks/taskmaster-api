@@ -35,6 +35,7 @@ Route::controller('TagController')->prefix('tags')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+    Route::post('verify-email', 'VerifyEmailController');
     Route::post('logout', 'AuthController@logout');
 
     Route::get('users/{user:username}/tasks/statuses', 'UserTaskController@statuses');
