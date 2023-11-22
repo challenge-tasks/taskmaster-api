@@ -40,6 +40,15 @@ class UserResource extends Resource
                     ->maxLength(255)
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $context): bool => $context === 'create'),
+
+                Forms\Components\TextInput::make('github_id')
+                    ->label('GitHub ID'),
+
+                Forms\Components\TextInput::make('github_url')
+                    ->label('GitHub URL'),
+
+                Forms\Components\TextInput::make('avatar')
+                    ->columnSpan(2),
             ]);
     }
 
@@ -57,6 +66,11 @@ class UserResource extends Resource
 
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+
+                Tables\Columns\IconColumn::make('email_verified_at')
+                    ->label('Verified')
+                    ->default(false)
+                    ->trueIcon('heroicon-o-check-circle'),
 
                 Tables\Columns\TextColumn::make('roles.name')
                     ->searchable(),
