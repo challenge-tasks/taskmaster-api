@@ -29,4 +29,5 @@ enum ErrorTypeEnum: string
     case GITHUB_ID_REQUIRED = 'github_id_required';
     case GITHUB_URL_REQUIRED = 'github_url_required';
     case SIGN_IN_WITH_PROVIDER_FAILED = 'sign_in_with_provider_failed';
+    case TOKEN_REQUIRED = 'token_required';
 }

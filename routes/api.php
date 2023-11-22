@@ -21,6 +21,9 @@ Route::controller('AuthController')->group(function () {
 
 Route::post('verify-email', 'VerifyEmailController');
 
+Route::get('password-recovery', 'PasswordRecoveryController@sendRecoveryNotification');
+Route::post('password-recovery', 'PasswordRecoveryController@recoverPassword');
+
 Route::controller('TaskController')->prefix('tasks')->group(function () {
     Route::get('/', 'index');
     Route::get('filter', 'filter');
