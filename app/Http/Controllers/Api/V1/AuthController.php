@@ -143,6 +143,7 @@ class AuthController extends Controller
      *              @OA\Property(property="username", type="string", example="johndoe"),
      *              @OA\Property(property="email", type="string", example="admin@gmail.com"),
      *              @OA\Property(property="github_id", type="int", example="42"),
+     *              @OA\Property(property="github_url", type="int", example="url_to_profile"),
      *              @OA\Property(property="avatar", type="string", example="url_to_avatar"),
      *          ),
      *     ),
@@ -176,7 +177,7 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'Sing in with GitHub failed.',
                     'type' => ErrorTypeEnum::SIGN_IN_WITH_PROVIDER_FAILED
-                ]);
+                ], 409);
             }
         }
 
