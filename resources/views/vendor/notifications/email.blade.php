@@ -3,7 +3,7 @@
         color: #4f46e5 !important;
     }
 
-    .im {
+    p.im, span.im {
         color: #64748b !important;
     }
 
@@ -20,7 +20,6 @@
         border-top: 8px solid #4f46e5 !important;
     }
 </style>
-
 
 <x-mail::message>
 {{-- Greeting --}}
