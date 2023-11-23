@@ -94,6 +94,8 @@ class PasswordRecoveryController extends Controller
         $user->password = Hash::make($request->input('password'));
         $user->save();
 
+        $user->sendPasswordRecoveredNotification();
+
         return response()->json([
             'success' => true
         ]);

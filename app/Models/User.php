@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\EmailVerificationNotification;
+use App\Notifications\PasswordRecoveredNotification;
 use App\Notifications\PasswordResetNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\RoleEnum;
@@ -78,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new PasswordResetNotification($token));
+    }
+
+    public function sendPasswordRecoveredNotification(): void
+    {
+        $this->notify(new PasswordRecoveredNotification());
     }
 
     public function solutions(): HasMany
