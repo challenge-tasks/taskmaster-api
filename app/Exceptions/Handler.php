@@ -4,10 +4,12 @@ namespace App\Exceptions;
 
 use App\Enums\ErrorTypeEnum;
 use App\Helpers\ValidationHelper;
+use App\Services\LoggerService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -37,6 +39,14 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        if (config('logger.enabled')) {
+            try {
+                (new LoggerService())->log($e);
+            } catch (\Exception $exception) {
+                Log::error($exception->getMessage());
+            }
+        }
+
         if ($request->is('api/*')) {
             $request->headers->set('Accept', 'application/json');
 

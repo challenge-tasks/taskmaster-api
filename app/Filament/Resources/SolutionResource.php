@@ -77,10 +77,10 @@ class SolutionResource extends Resource
                 Tables\Actions\Action::make('Mark as done')
                     ->form([
                         Forms\Components\TextInput::make('rating')
-                            ->label('Rating (1-5)')
+                            ->label('Rating (0-5)')
                             ->type('number')
                             ->required()
-                            ->minValue(1)
+                            ->minValue(0)
                             ->maxValue(5),
 
                         Forms\Components\RichEditor::make('comment')
