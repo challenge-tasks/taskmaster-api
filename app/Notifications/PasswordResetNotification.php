@@ -25,7 +25,7 @@ class PasswordResetNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $frontUrl = config('app.front_url');
-        $url = $frontUrl . '/?id=' . $notifiable->getKey() . '&hash=' . sha1($notifiable->getEmailForVerification());
+        $url = $frontUrl . '/recovery?email=' . $notifiable->email . '&token=' . $this->token;
 
         return (new MailMessage)
             ->subject('Восстановление пароля')
