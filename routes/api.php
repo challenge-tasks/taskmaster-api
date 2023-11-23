@@ -19,7 +19,7 @@ Route::controller('AuthController')->group(function () {
     Route::post('github/login', 'loginViaGithub');
 });
 
-Route::post('verify-email', 'VerifyEmailController');
+Route::post('email-verification/verify', 'EmailVerificationController@verify');
 
 Route::get('password-recovery', 'PasswordRecoveryController@sendRecoveryNotification');
 Route::post('password-recovery', 'PasswordRecoveryController@recoverPassword');
@@ -40,6 +40,8 @@ Route::controller('TagController')->prefix('tags')->group(function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', 'AuthController@logout');
+
+    Route::get('email-verification/resend', 'EmailVerificationController@resend');
 
     Route::get('users/{user:username}/tasks/statuses', 'UserTaskController@statuses');
     Route::post('users/{user:username}/tasks/{task:slug}/solutions', 'UserTaskController@storeSolution');

@@ -172,6 +172,10 @@ class AuthController extends Controller
                     'type' => ErrorTypeEnum::SIGN_IN_WITH_PROVIDER_FAILED
                 ], 409);
             }
+
+            if ($user->wasRecentlyCreated) {
+                $user->assignRole(RoleEnum::USER->value);
+            }
         }
 
         return response()->json([

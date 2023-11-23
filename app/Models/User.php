@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         'username',
         'avatar',
         'email',
+        'email_verified_at',
         'password',
         'github_id',
         'github_url',
