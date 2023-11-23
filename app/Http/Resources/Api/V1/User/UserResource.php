@@ -16,6 +16,9 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'is_email_verified' => isset($this->email_verified_at),
             'github_url' => $this->github_url,
+            'last_confirmation_notification_sent_at' => $this->last_confirmation_notification_sent_at
+                ? strtotime($this->last_confirmation_notification_sent_at)
+                : null,
             'created_at' => strtotime($this->created_at),
             'updated_at' => strtotime($this->updated_at),
         ];

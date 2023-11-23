@@ -29,6 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         'password',
         'github_id',
         'github_url',
+        'last_confirmation_notification_sent_at'
     ];
 
     protected $hidden = [
@@ -75,6 +76,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new EmailVerificationNotification());
+
+        $this->last_confirmation_notification_sent_at = now();
+        $this->save();
     }
 
     public function sendPasswordResetNotification($token): void

@@ -26,7 +26,8 @@ class RegisterRequest extends FormRequest
         $validated = parent::validated($key, $default);
 
         return array_merge($validated, [
-            'password' => Hash::make($validated['password'])
+            'password' => Hash::make($validated['password']),
+            'last_confirmation_notification_sent_at' => now()
         ]);
     }
 }
