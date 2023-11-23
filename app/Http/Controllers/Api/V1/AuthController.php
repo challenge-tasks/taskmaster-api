@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\ErrorTypeEnum;
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\LoginWithGitHubRequest;
 use App\Http\Requests\Api\V1\User\LoginRequest;
 use App\Http\Requests\Api\V1\User\RegisterRequest;
 use App\Http\Resources\Api\V1\User\UserResource;
@@ -12,7 +13,6 @@ use App\Models\User;
 use App\Services\User\GithubUserService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -157,15 +157,8 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function loginViaGithub(Request $request, GithubUserService $service): JsonResponse
+    public function loginViaGithub(LoginWithGitHubRequest $request, GithubUserService $service): JsonResponse
     {
-        $request->validate([
-            'username' => 'required',
-            'email' => 'required',
-            'github_id' => 'required',
-            'github_url' => 'required',
-        ]);
-
         $user = User::query()
             ->where('github_id', $request->input('github_id'))
             ->first();

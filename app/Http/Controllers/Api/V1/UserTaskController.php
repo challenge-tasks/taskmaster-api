@@ -9,8 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Solution\StoreSolutionRequest;
 use App\Http\Requests\Api\V1\User\UserTaskRequest;
 use App\Http\Resources\Api\V1\Task\TaskListResource;
-use App\Http\Resources\Api\V1\Task\TaskResource;
-use App\Models\Solution;
 use App\Models\User;
 use App\Services\Solution\SolutionService;
 use App\Services\Task\TaskQueryService;
@@ -18,8 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class UserTaskController extends Controller
 {

@@ -9,42 +9,6 @@ enum UserTaskStatusEnum: int
     case REVIEWING = 3;
     case DONE = 4;
 
-    public static function options(): array
-    {
-        return [
-            self::TODO->value => 'Нужно сделать',
-            self::IN_DEVELOPMENT->value => 'В процессе',
-            self::REVIEWING->value => 'На проверке',
-            self::DONE->value => 'Готово',
-        ];
-    }
-
-    public static function filterOptions(): array
-    {
-        return [
-            [
-                'value' => self::TODO->value,
-                'label' => 'Нужно сделать',
-                'slug' => 'todo'
-            ],
-            [
-                'value' => self::IN_DEVELOPMENT->value,
-                'label' => 'В процессе',
-                'slug' => 'in_development'
-            ],
-            [
-                'value' => self::REVIEWING->value,
-                'label' => 'На проверке',
-                'slug' => 'reviewing'
-            ],
-            [
-                'value' => self::DONE->value,
-                'label' => 'Готово',
-                'slug' => 'done'
-            ]
-        ];
-    }
-
     public static function labelFromOption(int $status): string
     {
         return match ($status) {
