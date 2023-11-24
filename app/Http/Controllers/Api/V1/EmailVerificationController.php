@@ -82,7 +82,8 @@ class EmailVerificationController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response()->json([
-            'success' => true
+            'success' => true,
+            'last_confirmation_notification_sent_at' => strtotime($user->last_confirmation_notification_sent_at)
         ]);
     }
 }
