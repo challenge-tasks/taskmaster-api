@@ -24,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(now()->addYear());
         Passport::refreshTokensExpireIn(now()->addYear());
         Passport::personalAccessTokensExpireIn(now()->addYear());
+
+        if (app()->isProduction()) {
+            URL::forceScheme('https');
+        }
     }
 }
