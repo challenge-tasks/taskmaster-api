@@ -6,11 +6,13 @@ use App\Enums\DifficultyEnum;
 use App\Enums\TaskStatusEnum;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Models\Task;
+use App\Services\ImageService;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Livewire\TemporaryUploadedFile;
 
 class TaskResource extends Resource
 {
@@ -49,7 +51,10 @@ class TaskResource extends Resource
                                 ->required()
                                 ->maxSize(2048)
                                 ->disk('public_uploads')
-                                ->directory('tasks'),
+                                ->directory('tasks')
+                                ->saveUploadedFileUsing(function (Forms\Components\BaseFileUpload $component, TemporaryUploadedFile $file) {
+                                    return (new ImageService())->uploadAsWebp($file, $component->getDirectory());
+                                }),
                         ]),
 
                     Forms\Components\Wizard\Step::make('Additional')
@@ -77,9 +82,13 @@ class TaskResource extends Resource
                                     Forms\Components\FileUpload::make('image')
                                         ->maxSize(2048)
                                         ->disk('public_uploads')
-                                        ->directory('tasks/additional'),
+                                        ->directory('tasks/additional')
+                                        ->saveUploadedFileUsing(function (Forms\Components\BaseFileUpload $component, TemporaryUploadedFile $file) {
+                                            return (new ImageService())->uploadAsWebp($file, $component->getDirectory());
+                                        }),
                                 ])
-                                ->createItemButtonLabel('Add image'),
+                                ->createItemButtonLabel('Add image')
+                                ->defaultItems(0),
                         ])
                 ])
                     ->columnSpan(2)
