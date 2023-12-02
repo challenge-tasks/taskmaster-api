@@ -9,13 +9,15 @@ use Intervention\Image\Facades\Image;
 
 class ImageService
 {
+    const QUALITY = 85;
+
     public function uploadAsWebp(UploadedFile $file, string $folder): string
     {
         $originalName = $file->getFilename();
         $originalExtension = $file->getClientOriginalExtension();
 
         $encodedName = str_replace($originalExtension, 'webp', $originalName);
-        $encodedImage = Image::make($file)->encode('webp');
+        $encodedImage = Image::make($file)->encode('webp', self::QUALITY);
 
         Storage::put($folder . '/' . $encodedName, $encodedImage->getEncoded());
 
@@ -45,7 +47,7 @@ class ImageService
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
-                ->save($resizedImageFullPath);
+                ->save($resizedImageFullPath, self::QUALITY);
 
             return $resizedImagePath;
         }

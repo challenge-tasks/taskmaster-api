@@ -10,10 +10,10 @@ class ImageController extends Controller
     /**
      * @OA\Get(
      *     path="/uploads/resize/{image}/{size}",
-     *     tags={"Изображения"},
-     *     summary="Сжатие изображения",
+     *     tags={"Images"},
+     *     summary="Compress image",
      *     @OA\Parameter(
-     *          description="Изображеие",
+     *          description="Image",
      *          in="path",
      *          name="image",
      *          required=true,
@@ -21,15 +21,15 @@ class ImageController extends Controller
      *          @OA\Examples(example="tasks/OnqsRZuQ3XyyJVYIiR9pwU4H4ic0aK-metaMS5qcGc=-.jpg", value="tasks/OnqsRZuQ3XyyJVYIiR9pwU4H4ic0aK-metaMS5qcGc=-.jpg", summary="tasks/OnqsRZuQ3XyyJVYIiR9pwU4H4ic0aK-metaMS5qcGc=-.jpg"),
      *     ),
      *     @OA\Parameter(
-     *          description="Размеры",
+     *          description="Sizes",
      *          in="path",
      *          name="size",
      *          required=true,
      *          @OA\Schema(type="string"),
      *          @OA\Examples(example="500x500", value="500x500", summary="500x500"),
      *     ),
-     *     @OA\Response(response="200", description="Успешно"),
-     *     @OA\Response(response="404", description="Не найдено")
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Not found")
      * )
      */
     public function resize(string $folder, string $image, string $size)
