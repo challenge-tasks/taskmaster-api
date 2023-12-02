@@ -166,9 +166,7 @@ class TaskController extends Controller
         if (Auth::guard('api')->check() && $task->isBelongsToUser()) {
             $user = Auth::guard('api')->user();
 
-            $task = Cache::remember($user->username . '_task_' . $slug, now()->addHour(), function () use ($user, $slug) {
-                return $user->tasks()->where('slug', $slug)->firstOrFail();
-            });
+            $task = $user->tasks()->where('slug', $slug)->firstOrFail();
         }
 
         return TaskResource::make($task);

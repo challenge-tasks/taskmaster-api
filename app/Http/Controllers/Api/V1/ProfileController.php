@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
@@ -23,9 +24,11 @@ class ProfileController extends Controller
      */
     public function show(): UserResource
     {
-        $user = Auth::user();
+        return Cache::remember('profile_' . Auth::id(), now()->addDay(), function () {
+            $user = Auth::user();
 
-        return UserResource::make($user);
+            return UserResource::make($user);
+        });
     }
 
     /**
