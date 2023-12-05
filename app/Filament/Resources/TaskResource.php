@@ -49,7 +49,7 @@ class TaskResource extends Resource
 
                             Forms\Components\FileUpload::make('image')
                                 ->required()
-                                ->maxSize(2048)
+                                ->maxSize(1024 * 5)
                                 ->disk('public_uploads')
                                 ->directory('tasks')
                                 ->saveUploadedFileUsing(function (Forms\Components\BaseFileUpload $component, TemporaryUploadedFile $file) {
