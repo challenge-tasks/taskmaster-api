@@ -56,6 +56,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
             if ($user->isDirty('email')) {
                 $hash = md5($user->email);
                 $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+
+                $user->email_verified_at = null;
+                $user->sendEmailVerificationNotification();
             }
         });
 
@@ -79,7 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         $this->notify(new EmailVerificationNotification());
 
         $this->last_confirmation_notification_sent_at = now();
-        $this->save();
+        $this->saveQuietly();
     }
 
     public function sendPasswordResetNotification($token): void
