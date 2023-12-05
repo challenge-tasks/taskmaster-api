@@ -9,7 +9,7 @@ use Intervention\Image\Facades\Image;
 
 class ImageService
 {
-    const QUALITY = 90;
+    const QUALITY = 95;
 
     public function uploadAsWebp(UploadedFile $file, string $folder): string
     {
