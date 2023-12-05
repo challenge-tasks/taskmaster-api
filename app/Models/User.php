@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -54,12 +55,16 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
         static::updating(function (User $user) {
             if ($user->isDirty('email')) {
-                $hash = md5($user->email);
-                $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+                if (is_null($user->github_id)) {
+                    $hash = md5($user->email);
+                    $user->avatar = 'https://www.gravatar.com/avatar/' . $hash . '?d=identicon&s=100';
+                }
 
                 $user->email_verified_at = null;
                 $user->sendEmailVerificationNotification();
             }
+
+            Cache::delete('profile_' . $user->id);
         });
 
         static::deleting(function (User $user) {
