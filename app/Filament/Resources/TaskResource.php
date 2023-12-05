@@ -80,7 +80,7 @@ class TaskResource extends Resource
                                 ->relationship('images')
                                 ->schema([
                                     Forms\Components\FileUpload::make('image')
-                                        ->maxSize(2048)
+                                        ->maxSize(1024 * 5)
                                         ->disk('public_uploads')
                                         ->directory('tasks/additional')
                                         ->saveUploadedFileUsing(function (Forms\Components\BaseFileUpload $component, TemporaryUploadedFile $file) {
