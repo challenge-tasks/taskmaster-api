@@ -129,6 +129,18 @@ class TaskResource extends Resource
 
                 Tables\Filters\SelectFilter::make('difficulty')
                     ->options(DifficultyEnum::options()),
+
+                Tables\Filters\SelectFilter::make('stacks')
+                    ->relationship('stacks', 'name')
+                    ->multiple()
+                    ->optionsLimit(5)
+                    ->searchable(),
+
+                Tables\Filters\SelectFilter::make('tags')
+                    ->relationship('tags', 'name')
+                    ->multiple()
+                    ->optionsLimit(5)
+                    ->searchable()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
