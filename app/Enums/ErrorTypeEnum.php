@@ -11,6 +11,7 @@ enum ErrorTypeEnum: string
     case NOT_FOUND = 'not_found'; // 404
     case METHOD_NOT_ALLOWED = 'method_not_allowed'; // 405
     case VALIDATION_ERROR = 'validation_error'; // 422
+    case TOO_MANY_REQUESTS = 'too_many_requests'; // 429
     case SERVER_ERROR = 'server_error'; // 500
 
     // Validation types

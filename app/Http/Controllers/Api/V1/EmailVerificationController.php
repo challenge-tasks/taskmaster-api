@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\EmailVerificationRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class EmailVerificationController extends Controller
@@ -71,6 +72,23 @@ class EmailVerificationController extends Controller
     public function resend(): JsonResponse
     {
         $user = Auth::user();
+
+        $emailVerificationInterval = config('mail.email_verification_interval');
+
+        if (
+            $user->last_confirmation_notification_sent_at
+            && Carbon::parse($user->last_confirmation_notification_sent_at)->diffInSeconds(now()) < $emailVerificationInterval
+        ) {
+            $retryAfter = $emailVerificationInterval - Carbon::parse($user->last_confirmation_notification_sent_at)->diffInSeconds(now());
+
+            return response()->json([
+                'message' => 'Retry after ' . $retryAfter . 's',
+                'type' => ErrorTypeEnum::TOO_MANY_REQUESTS
+            ], 429)
+                ->withHeaders([
+                    'Retry-After' => $retryAfter
+                ]);
+        }
 
         if ($user->hasVerifiedEmail()) {
             return response()->json([

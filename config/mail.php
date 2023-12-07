@@ -15,6 +15,8 @@ return [
 
     'default' => env('MAIL_MAILER', 'smtp'),
 
+    'email_verification_interval' => env('EMAIL_VERIFICATION_INTERVAL'),
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
