@@ -24,11 +24,9 @@ class ProfileController extends Controller
      */
     public function show(): UserResource
     {
-        return Cache::remember('profile_' . Auth::id(), now()->addDay(), function () {
-            $user = Auth::user();
+        $user = Auth::user();
 
-            return UserResource::make($user);
-        });
+        return UserResource::make($user);
     }
 
     /**
