@@ -82,7 +82,7 @@ class EmailVerificationController extends Controller
             $retryAfter = $emailVerificationInterval - Carbon::parse($user->last_confirmation_notification_sent_at)->diffInSeconds(now());
 
             return response()->json([
-                'message' => 'Retry after ' . $retryAfter . 's',
+                'message' => $retryAfter,
                 'type' => ErrorTypeEnum::TOO_MANY_REQUESTS
             ], 429)
                 ->withHeaders([
