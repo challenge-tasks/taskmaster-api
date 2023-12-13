@@ -15,7 +15,8 @@ class StoreSolutionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'mimes:rar,zip']
+            'file' => ['required_without:url', 'mimes:rar,zip'],
+            'url' => ['required_without:file', 'url:http,https']
         ];
     }
 }

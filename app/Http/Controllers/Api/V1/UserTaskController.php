@@ -241,9 +241,13 @@ class UserTaskController extends Controller
             return $user->tasks()->where('slug', $taskSlug)->firstOrFail();
         });
 
-        $successfullyUploaded = $service->uploadSolution($request->file('file'), $user->id, $task->id);
+        if ($request->has('url')) {
+            $successfullySaved = $service->saveSolutionWithURL($request->input('url'), $user->id, $task->id);
+        } else {
+            $successfullySaved = $service->uploadSolution($request->file('file'), $user->id, $task->id);
+        }
 
-        if ($successfullyUploaded) {
+        if ($successfullySaved) {
             $user->tasks()->updateExistingPivot($task, [
                 'status' => UserTaskStatusEnum::REVIEWING->value
             ]);

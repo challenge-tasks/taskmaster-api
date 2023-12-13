@@ -54,6 +54,18 @@ class ValidationHelper
             $type = ErrorTypeEnum::FILE_MUST_BE_RAR_OR_ZIP;
         }
 
+        else if (isset($failedRules['file']['RequiredWithout'][0]) && $failedRules['file']['RequiredWithout'][0] === 'url') {
+            $type = ErrorTypeEnum::FILE_OR_URL_REQUIRED;
+        }
+
+        else if (isset($failedRules['url']['RequiredWithout'][0]) && $failedRules['url']['RequiredWithout'][0] === 'file') {
+            $type = ErrorTypeEnum::FILE_OR_URL_REQUIRED;
+        }
+
+        else if (isset($failedRules['url']['Url'])) {
+            $type = ErrorTypeEnum::URL_INVALID;
+        }
+
         else if (isset($failedRules['github_id']['Required'])) {
             $type = ErrorTypeEnum::GITHUB_ID_REQUIRED;
         }

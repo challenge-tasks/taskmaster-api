@@ -16,6 +16,7 @@ class Solution extends Model
         'user_id',
         'task_id',
         'file',
+        'url',
         'is_checked',
         'rating',
         'comment',

@@ -72,7 +72,14 @@ class SolutionResource extends Resource
                         return response()->download($file);
                     })
                     ->icon('heroicon-o-download')
-                    ->color('warning'),
+                    ->color('warning')
+                    ->hidden(fn($record) => is_null($record->file)),
+
+                Tables\Actions\Action::make('Open link')
+                    ->action(fn($record) => redirect()->to($record->url))
+                    ->icon('heroicon-o-link')
+                    ->color('warning')
+                    ->hidden(fn($record) => is_null($record->url)),
 
                 Tables\Actions\Action::make('Mark as done')
                     ->form([
