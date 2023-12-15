@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers\TasksRelationManager;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -102,7 +103,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TasksRelationManager::class
         ];
     }
 

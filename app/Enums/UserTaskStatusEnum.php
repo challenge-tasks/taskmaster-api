@@ -9,6 +9,16 @@ enum UserTaskStatusEnum: int
     case REVIEWING = 3;
     case DONE = 4;
 
+    public static function options(): array
+    {
+        return [
+            self::TODO->value => 'Todo',
+            self::IN_DEVELOPMENT->value => 'In development',
+            self::REVIEWING->value => 'Reviewing',
+            self::DONE->value => 'Done',
+        ];
+    }
+
     public static function labelFromOption(int $status): string
     {
         return match ($status) {
