@@ -89,13 +89,20 @@ class UserTaskController extends Controller
 
         $user = User::query()->where('username', $username)->firstOrFail();
 
+        $statusesPriority = [
+            UserTaskStatusEnum::IN_DEVELOPMENT->value,
+            UserTaskStatusEnum::REVIEWING->value,
+            UserTaskStatusEnum::DONE->value
+        ];
+
         $tasks = $user->tasks()
             ->with([
                 'stacks',
                 'tags',
                 'solutions' => fn(HasMany $query) => $query->where('user_id', $user->id)
             ])
-            ->where('tasks.status', TaskStatusEnum::PUBLISHED);
+            ->where('tasks.status', TaskStatusEnum::PUBLISHED)
+            ->orderByRaw('FIELD(task_user.status,' . implode(',', $statusesPriority) . ')');
 
         $tasks = TaskQueryService::filter($tasks)->paginate($perPage);
 
