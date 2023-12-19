@@ -78,6 +78,10 @@ class ValidationHelper
             $type = ErrorTypeEnum::TOKEN_REQUIRED;
         }
 
+        else if (isset($failedRules['text']['Required'])) {
+            $type = ErrorTypeEnum::TEXT_REQUIRED;
+        }
+
         return $type;
     }
 }

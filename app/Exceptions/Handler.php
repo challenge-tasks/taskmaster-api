@@ -92,6 +92,7 @@ class Handler extends ExceptionHandler
             Response::HTTP_NOT_FOUND => ErrorTypeEnum::NOT_FOUND,
             Response::HTTP_METHOD_NOT_ALLOWED => ErrorTypeEnum::METHOD_NOT_ALLOWED,
             Response::HTTP_UNPROCESSABLE_ENTITY => ValidationHelper::getErrorType($e->validator->failed()),
+            Response::HTTP_TOO_MANY_REQUESTS => ErrorTypeEnum::TOO_MANY_REQUESTS,
             default => ErrorTypeEnum::SERVER_ERROR,
         };
 

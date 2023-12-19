@@ -100,6 +100,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         $this->notify(new PasswordRecoveredNotification());
     }
 
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
+    }
+
     public function solutions(): HasMany
     {
         return $this->hasMany(Solution::class);

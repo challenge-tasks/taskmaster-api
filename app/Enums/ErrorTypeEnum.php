@@ -33,6 +33,7 @@ enum ErrorTypeEnum: string
     case SIGN_IN_WITH_PROVIDER_FAILED = 'sign_in_with_provider_failed';
     case TOKEN_REQUIRED = 'token_required';
     case URL_INVALID = 'url_invalid';
+    case TEXT_REQUIRED = 'text_required';
 
     // Other types
     case EMAIL_ALREADY_VERIFIED = 'email_already_verified';

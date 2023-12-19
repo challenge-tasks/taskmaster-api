@@ -38,6 +38,10 @@ Route::controller('TagController')->prefix('tags')->group(function () {
     Route::get('search', 'search');
 });
 
+Route::controller('ReportController')->prefix('reports')->middleware('throttle:5,1')->group(function () {
+   Route::post('/', 'store');
+});
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', 'AuthController@logout');
 
